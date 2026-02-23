@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Art Style — J Franco Marketing</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/summary.css">
+  <link rel="stylesheet" href="./css/animations.css">
+  <style>
+    /* Art preview swatches — page-specific */
+    .art-preview--modern   { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #D9042B 100%); }
+    .art-preview--clean    { background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 50%, #28303d 100%); }
+    .art-preview--bold     { background: linear-gradient(135deg, #D9042B 0%, #ff6b35 50%, #ffd700 100%); }
+    .art-preview--classic  { background: linear-gradient(135deg, #2c3e50 0%, #bdc3c7 50%, #ecf0f1 100%); }
+    .art-preview--luxury   { background: linear-gradient(135deg, #1a1a1a 0%, #c9a84c 50%, #1a1a1a 100%); }
+    .art-preview--urgent   { background: linear-gradient(135deg, #D9042B 0%, #28303d 100%); }
+
+    .art-preview-label {
+      position: absolute;
+      bottom: 10px; left: 10px;
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      color: white;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ SITE HEADER ═══ -->
+<header class="site-header">
+  <a href="index.html" class="site-logo">
+    <div class="site-logo__img--placeholder">JF</div>
+    <span class="site-logo__name">J Franco <span>Marketing</span></span>
+  </a>
+  <div class="site-header__right">
+    <span class="site-header__contact t-body-xs text-muted">Questions? Call us</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ PROGRESS BAR ═══ -->
+<nav class="progress-bar">
+  <div class="progress-bar__inner">
+    <div class="progress-step progress-step--done">
+      <span class="progress-step__num">✓</span>
+      <span class="progress-step__label">Select Mailer</span>
+    </div>
+    <div class="progress-step progress-step--active">
+      <span class="progress-step__num">2</span>
+      <span class="progress-step__label">Art Style</span>
+    </div>
+    <div class="progress-step">
+      <span class="progress-step__num">3</span>
+      <span class="progress-step__label">Data & Options</span>
+    </div>
+    <div class="progress-step">
+      <span class="progress-step__num">4</span>
+      <span class="progress-step__label">Confirm & Order</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ PAGE HEADER ═══ -->
+<div class="page-header">
+  <div class="page-header__inner">
+    <a href="javascript:history.back()" class="page-header__back">← Back to Mailer Selection</a>
+    <p class="t-eyebrow page-header__eyebrow">Step 2 of 4 · Art Direction</p>
+    <h1 class="t-display t-display--lg page-header__title">Choose Your <em>Art Style</em></h1>
+    <p class="t-body page-header__sub">Select the visual direction for your mailer. Each style is available in multiple color variations — your rep will send proofs before print.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PAGE BODY ═══ -->
+<div class="page-body">
+
+  <!-- Gallery -->
+  <section class="gallery-section anim-fade-up">
+    <div class="gallery-section__heading">
+      <span class="t-label text-muted">Art Style Options</span>
+    </div>
+
+    <div class="gallery-grid gallery-grid--art stagger-children" id="art-grid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- Order Summary -->
+  <aside class="order-summary">
+    <div class="order-summary__header">
+      <div class="order-summary__title">Your Order</div>
+      <p class="order-summary__sub">Progress saved as you select</p>
+    </div>
+
+    <div class="summary-steps">
+      <div class="summary-step-row done">
+        <span class="summary-step-row__num done">✓</span>
+        <span class="summary-step-row__label">Mailer</span>
+        <span class="summary-step-row__value" id="step-val-1">—</span>
+      </div>
+      <div class="summary-step-row active">
+        <span class="summary-step-row__num active">2</span>
+        <span class="summary-step-row__label">Art Style</span>
+        <span class="summary-step-row__value" id="step-val-2">—</span>
+      </div>
+      <div class="summary-step-row">
+        <span class="summary-step-row__num">3</span>
+        <span class="summary-step-row__label">Data & Options</span>
+        <span class="summary-step-row__value">—</span>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="order-summary__items" id="summary-items">
+      <div class="order-summary__empty">
+        <div class="order-summary__empty-icon">🎨</div>
+        <p>Select an art style from the gallery to continue.</p>
+      </div>
+    </div>
+
+    <div class="order-summary__footer" id="summary-footer" style="display:none">
+      <div class="order-summary__total-row">
+        <span class="order-summary__total-label">Campaign Base</span>
+        <span class="order-summary__total-value" id="summary-total">$0</span>
+      </div>
+      <button class="btn btn--primary btn--lg btn--full" id="next-btn" onclick="goNext()" disabled>
+        Next: Data & Options →
+      </button>
+      <p class="order-summary__cta-note">Final pricing shown after data selection.</p>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  // ─── Art Style Data ───
+  const ART_STYLES = [
+    {
+      id: 'modern',
+      name: 'Modern Dark',
+      desc: 'Bold, dark backgrounds with red accents. High contrast, premium feel. Works great for conquest and credit mailers.',
+      previewClass: 'art-preview--modern',
+      tags: ['Dark Theme', 'High Impact', 'Premium'],
+      adderLabel: 'Included',
+      price: 0
+    },
+    {
+      id: 'clean',
+      name: 'Clean & Minimal',
+      desc: 'Light, airy layout with clean whitespace. Trusted, approachable feel. Best for letters and multi-piece kits.',
+      previewClass: 'art-preview--clean',
+      tags: ['Light Theme', 'Professional', 'Letter Friendly'],
+      adderLabel: 'Included',
+      price: 0
+    },
+    {
+      id: 'bold',
+      name: 'Bold & Energetic',
+      desc: 'Full-bleed color, oversized typography, high urgency. Perfect for event campaigns and saturation blitzes.',
+      previewClass: 'art-preview--bold',
+      tags: ['High Energy', 'Event Ready', 'Saturation'],
+      adderLabel: 'Included',
+      price: 0
+    },
+    {
+      id: 'classic',
+      name: 'Classic Professional',
+      desc: 'Traditional business-letter style. Conservative, authoritative. Ideal for BK, financial, and credit campaigns.',
+      previewClass: 'art-preview--classic',
+      tags: ['Conservative', 'BK Friendly', 'Trust-Building'],
+      adderLabel: 'Included',
+      price: 0
+    },
+    {
+      id: 'luxury',
+      name: 'Luxury Gold',
+      desc: 'Gold foil accents on deep backgrounds. Premium positioning for high-ticket inventory and VIP outreach.',
+      previewClass: 'art-preview--luxury',
+      tags: ['Gold Accents', 'VIP Feel', 'High-Ticket'],
+      adderLabel: '+$150',
+      price: 150
+    },
+    {
+      id: 'urgent',
+      name: 'Urgent Response',
+      desc: 'Red and dark urgency-focused layout. Time-sensitive offer framing. Best for end-of-month and clearance events.',
+      previewClass: 'art-preview--urgent',
+      tags: ['Urgency', 'Time-Sensitive', 'Clearance'],
+      adderLabel: 'Included',
+      price: 0
+    },
+  ];
+
+  // ─── State ───
+  let order = {};
+  const saved = sessionStorage.getItem('order');
+  if (saved) order = JSON.parse(saved);
+
+  if (!order.mailer) {
+    window.location.href = 'index.html';
+  }
+
+  let selectedStyle = order.artStyle || null;
+
+  // Populate step tracker
+  document.getElementById('step-val-1').textContent = order.mailer ? order.mailer.name : '—';
+  if (selectedStyle) document.getElementById('step-val-2').textContent = selectedStyle.name;
+
+  // ─── Render ───
+  function renderArtTiles() {
+    const grid = document.getElementById('art-grid');
+    grid.innerHTML = ART_STYLES.map(style => {
+      const sel = selectedStyle && selectedStyle.id === style.id;
+      return `
+        <div class="art-tile${sel ? ' is-selected' : ''}" id="art-${style.id}" onclick="selectStyle('${style.id}')">
+          <span class="art-tile__badge">✓ Selected</span>
+          <div class="art-tile__preview ${style.previewClass}">
+            <span class="art-preview-label">${style.name}</span>
+            <!--
+              IMAGE PLACEMENT:
+              Replace art-tile__preview with:
+              <img src="../assets/art/${style.id}.jpg" alt="${style.name}" class="tile-img">
+            -->
+          </div>
+          <div class="art-tile__body">
+            <div class="art-tile__name">${style.name}</div>
+            <div class="art-tile__desc">${style.desc}</div>
+            <div class="tile-footer">
+              <div class="art-tile__tags">
+                ${style.tags.map(t => `<span class="badge badge--grey">${t}</span>`).join('')}
+              </div>
+              <span class="badge ${style.price > 0 ? 'badge--red' : 'badge--dark'}">${style.adderLabel}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function selectStyle(id) {
+    const style = ART_STYLES.find(s => s.id === id);
+    if (!style) return;
+    selectedStyle = style;
+
+    document.querySelectorAll('.art-tile').forEach(t => t.classList.remove('is-selected'));
+    document.getElementById(`art-${id}`).classList.add('is-selected');
+
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const hasSel = !!selectedStyle;
+    document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
+
+    if (hasSel) {
+      const base  = order.mailer ? order.mailer.price : 0;
+      const total = base + (selectedStyle.price || 0);
+      document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
+      document.getElementById('step-val-2').textContent    = selectedStyle.name;
+      document.getElementById('next-btn').removeAttribute('disabled');
+
+      document.getElementById('summary-items').innerHTML = `
+        <div class="summary-item">
+          <div class="summary-item__top">
+            <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
+          </div>
+          <div class="summary-item__meta">
+            <span class="summary-item__tag">${order.categoryLabel || ''}</span>
+            <span class="summary-item__price">$${order.mailer ? order.mailer.price.toLocaleString() : 0}</span>
+          </div>
+          ${selectedStyle.price > 0 ? `
+            <div class="summary-item__sub-line">
+              <span>Luxury Art Upgrade</span>
+              <span>+$${selectedStyle.price}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    } else {
+      document.getElementById('next-btn').setAttribute('disabled', true);
+    }
+  }
+
+  function goNext() {
+    if (!selectedStyle) return;
+
+    order.artStyle = selectedStyle;
+    sessionStorage.setItem('order', JSON.stringify(order));
+    window.location.href = 'data-options.html';
+  }
+
+  // ─── Run ───
+  renderArtTiles();
+  updateSummary();
+</script>
+
+</body>
+</html>

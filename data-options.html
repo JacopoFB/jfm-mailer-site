@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data & Options — J Franco Marketing</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/summary.css">
+  <link rel="stylesheet" href="./css/animations.css">
+  <style>
+    /* Quantity selector — page-specific */
+    .qty-selector {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: var(--light);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--grey-soft);
+    }
+
+    .qty-selector__label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--dark);
+      flex: 1;
+    }
+
+    .qty-selector__controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-btn {
+      width: 32px; height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      border: 1.5px solid var(--grey-soft);
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background var(--ease), border-color var(--ease);
+      color: var(--dark);
+      font-weight: 300;
+    }
+
+    .qty-btn:hover { border-color: var(--red); color: var(--red); }
+
+    .qty-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--dark);
+      min-width: 60px;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    .qty-unit {
+      font-size: 11px;
+      color: var(--grey-text);
+    }
+
+    .add-ons-section {
+      margin-top: var(--space-lg);
+    }
+
+    .add-on-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px var(--space-md);
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--grey-soft);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: border-color var(--ease), background var(--ease);
+      gap: var(--space-sm);
+    }
+
+    .add-on-item:hover { border-color: var(--red-border); }
+
+    .add-on-item.is-checked {
+      border-color: var(--red);
+      background: rgba(217,4,43,0.02);
+    }
+
+    .add-on-item__left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .add-on-item__icon { font-size: 20px; }
+
+    .add-on-item__info {}
+
+    .add-on-item__name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .add-on-item__desc {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--grey-text);
+    }
+
+    .add-on-item__right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .add-on-item__price {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--dark);
+    }
+
+    .checkbox {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--grey-soft);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+      transition: all var(--ease);
+      flex-shrink: 0;
+    }
+
+    .add-on-item.is-checked .checkbox {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ SITE HEADER ═══ -->
+<header class="site-header">
+  <a href="index.html" class="site-logo">
+    <div class="site-logo__img--placeholder">JF</div>
+    <span class="site-logo__name">J Franco <span>Marketing</span></span>
+  </a>
+  <div class="site-header__right">
+    <span class="site-header__contact t-body-xs text-muted">Questions? Call us</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ PROGRESS BAR ═══ -->
+<nav class="progress-bar">
+  <div class="progress-bar__inner">
+    <div class="progress-step progress-step--done">
+      <span class="progress-step__num">✓</span>
+      <span class="progress-step__label">Select Mailer</span>
+    </div>
+    <div class="progress-step progress-step--done">
+      <span class="progress-step__num">✓</span>
+      <span class="progress-step__label">Art Style</span>
+    </div>
+    <div class="progress-step progress-step--active">
+      <span class="progress-step__num">3</span>
+      <span class="progress-step__label">Data & Options</span>
+    </div>
+    <div class="progress-step">
+      <span class="progress-step__num">4</span>
+      <span class="progress-step__label">Confirm & Order</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ PAGE HEADER ═══ -->
+<div class="page-header">
+  <div class="page-header__inner">
+    <a href="javascript:history.back()" class="page-header__back">← Back to Art Style</a>
+    <p class="t-eyebrow page-header__eyebrow">Step 3 of 4 · Data & Volume</p>
+    <h1 class="t-display t-display--lg page-header__title">Data <em>Options</em></h1>
+    <p class="t-body page-header__sub">Select your mailing data set, set your volume, and add any campaign enhancements. These choices finalize your campaign price.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ PAGE BODY ═══ -->
+<div class="page-body">
+
+  <section class="gallery-section anim-fade-up">
+
+    <!-- Data Set Selection -->
+    <div class="gallery-section__heading">
+      <span class="t-label text-muted">Choose Your Data Set</span>
+    </div>
+
+    <div class="gallery-grid gallery-grid--data stagger-children" id="data-grid">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Volume / Quantity -->
+    <div class="add-ons-section">
+      <div class="gallery-section__heading" style="margin-top: var(--space-lg)">
+        <span class="t-label text-muted">Mailing Volume</span>
+      </div>
+
+      <div class="qty-selector">
+        <div class="qty-selector__label">
+          Number of Pieces<br>
+          <span class="t-body-xs text-muted">Minimum 1,000 · Price adjusts per thousand</span>
+        </div>
+        <div class="qty-selector__controls">
+          <button class="qty-btn" onclick="adjustQty(-1000)">−</button>
+          <div>
+            <div class="qty-value" id="qty-display">5,000</div>
+            <div class="qty-unit" style="text-align:center">pieces</div>
+          </div>
+          <button class="qty-btn" onclick="adjustQty(1000)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add-On Options -->
+    <div class="add-ons-section">
+      <div class="gallery-section__heading">
+        <span class="t-label text-muted">Campaign Add-Ons <span class="badge badge--grey" style="margin-left:6px;">Optional</span></span>
+      </div>
+
+      <div id="addons-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Order Summary -->
+  <aside class="order-summary">
+    <div class="order-summary__header">
+      <div class="order-summary__title">Your Order</div>
+      <p class="order-summary__sub">Almost there — review before confirming</p>
+    </div>
+
+    <div class="summary-steps">
+      <div class="summary-step-row done">
+        <span class="summary-step-row__num done">✓</span>
+        <span class="summary-step-row__label">Mailer</span>
+        <span class="summary-step-row__value" id="step-val-1">—</span>
+      </div>
+      <div class="summary-step-row done">
+        <span class="summary-step-row__num done">✓</span>
+        <span class="summary-step-row__label">Art Style</span>
+        <span class="summary-step-row__value" id="step-val-2">—</span>
+      </div>
+      <div class="summary-step-row active">
+        <span class="summary-step-row__num active">3</span>
+        <span class="summary-step-row__label">Data & Options</span>
+        <span class="summary-step-row__value" id="step-val-3">—</span>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="order-summary__items" id="summary-breakdown">
+      <div class="order-summary__empty">
+        <div class="order-summary__empty-icon">📊</div>
+        <p>Select a data set to see your full pricing breakdown.</p>
+      </div>
+    </div>
+
+    <div class="order-summary__footer" id="summary-footer" style="display:none">
+      <div class="order-summary__total-row">
+        <span class="order-summary__total-label">Campaign Total</span>
+        <span class="order-summary__total-value" id="summary-total">$0</span>
+      </div>
+      <button class="btn btn--primary btn--lg btn--full" id="next-btn" onclick="goNext()" disabled>
+        Review & Confirm →
+      </button>
+      <p class="order-summary__cta-note">Final step — you'll review everything before submitting.</p>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  // ─── Data Sets ───
+  const DATA_SETS = [
+    {
+      id: 'database',
+      name: 'Dealer / Client Database',
+      desc: 'Use your own CRM or customer file. Upload a list and we match, clean, and suppress against NCOA and DNC registers.',
+      icon: '📁',
+      pricePerK: 45,
+      tag: 'Your Data'
+    },
+    {
+      id: 'conquest',
+      name: 'Conquest — Geo + Demographic',
+      desc: 'Prospect list built from your target zip codes, filtered by age, income, vehicle type, and estimated credit tier.',
+      icon: '🗺️',
+      pricePerK: 65,
+      tag: 'New Prospects'
+    },
+    {
+      id: 'inmarket',
+      name: 'In-Market Shoppers',
+      desc: 'Behavioral data — consumers who have actively been searching or researching your category in the last 30–90 days.',
+      icon: '🎯',
+      pricePerK: 85,
+      tag: 'Intent Data'
+    },
+    {
+      id: 'equity',
+      name: 'Equity / Loyalty Trigger',
+      desc: 'Matches existing customers or prospects currently in a favorable equity or lease-end window. Highly targeted.',
+      icon: '📈',
+      pricePerK: 95,
+      tag: 'High Intent'
+    },
+    {
+      id: 'subprime',
+      name: 'Subprime / Credit Band',
+      desc: 'Scrubbed list filtered to specific credit score bands. Ideal for credit, BK, and second-chance campaigns.',
+      icon: '💳',
+      pricePerK: 75,
+      tag: 'Credit Filtered'
+    },
+  ];
+
+  const ADD_ONS = [
+    { id: 'ncoa',    name: 'NCOA Address Verification',  desc: 'National Change of Address scrub — keeps your list deliverable and USPS compliant.',        icon: '✅', price: 150 },
+    { id: 'dnc',     name: 'DNC Suppression',            desc: 'Do-Not-Contact suppression across state and federal registers. Required for phone campaigns.',  icon: '🚫', price: 100 },
+    { id: 'landing', name: 'Personalized Landing Page',  desc: 'Each mailer includes a unique QR / PURL driving to a branded landing page with lead capture.', icon: '🌐', price: 499 },
+    { id: 'tracking',name: 'Campaign Tracking Dashboard',desc: 'Real-time delivery and response tracking. See delivery rates, QR scans, and response windows.',  icon: '📊', price: 299 },
+    { id: 'proof',   name: 'Physical Proof / Sample',    desc: 'Receive a printed proof of your mailer before the full run. Typically ships within 3 days.',   icon: '🖨️', price: 75  },
+  ];
+
+  // ─── State ───
+  let order = {};
+  const saved = sessionStorage.getItem('order');
+  if (saved) order = JSON.parse(saved);
+
+  if (!order.mailer || !order.artStyle) {
+    window.location.href = 'index.html';
+  }
+
+  let selectedDataSet  = order.dataOption  || null;
+  let selectedAddOns   = order.addOns      || [];
+  let quantity         = order.quantity    || 5000;
+
+  // Populate step vals
+  document.getElementById('step-val-1').textContent = order.mailer    ? order.mailer.name    : '—';
+  document.getElementById('step-val-2').textContent = order.artStyle  ? order.artStyle.name  : '—';
+  document.getElementById('qty-display').textContent = quantity.toLocaleString();
+
+  // ─── Render Data Sets ───
+  function renderDataSets() {
+    const grid = document.getElementById('data-grid');
+    grid.innerHTML = DATA_SETS.map(ds => {
+      const sel = selectedDataSet && selectedDataSet.id === ds.id;
+      return `
+        <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.id}" onclick="selectDataSet('${ds.id}')">
+          <div class="data-option__left">
+            <div class="data-option__icon">${ds.icon}</div>
+            <div class="data-option__info">
+              <div class="data-option__name">${ds.name}</div>
+              <div class="data-option__desc">${ds.desc}</div>
+              <span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>
+            </div>
+          </div>
+          <div class="data-option__right">
+            <div class="data-option__price">$${ds.pricePerK}</div>
+            <div class="data-option__price-note">per 1,000 pieces</div>
+            <div class="data-option__check">✓</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ─── Render Add-Ons ───
+  function renderAddOns() {
+    const list = document.getElementById('addons-list');
+    list.innerHTML = ADD_ONS.map(ao => {
+      const checked = selectedAddOns.some(a => a.id === ao.id);
+      return `
+        <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.id}" onclick="toggleAddOn('${ao.id}')">
+          <div class="add-on-item__left">
+            <span class="add-on-item__icon">${ao.icon}</span>
+            <div class="add-on-item__info">
+              <div class="add-on-item__name">${ao.name}</div>
+              <div class="add-on-item__desc">${ao.desc}</div>
+            </div>
+          </div>
+          <div class="add-on-item__right">
+            <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
+            <div class="checkbox">✓</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ─── Actions ───
+  function selectDataSet(id) {
+    const ds = DATA_SETS.find(d => d.id === id);
+    if (!ds) return;
+    selectedDataSet = ds;
+
+    document.querySelectorAll('.data-option').forEach(el => el.classList.remove('is-selected'));
+    document.getElementById(`ds-${id}`).classList.add('is-selected');
+
+    updateSummary();
+  }
+
+  function toggleAddOn(id) {
+    const ao = ADD_ONS.find(a => a.id === id);
+    if (!ao) return;
+
+    const idx = selectedAddOns.findIndex(a => a.id === id);
+    if (idx > -1) {
+      selectedAddOns.splice(idx, 1);
+      document.getElementById(`ao-${id}`).classList.remove('is-checked');
+    } else {
+      selectedAddOns.push(ao);
+      document.getElementById(`ao-${id}`).classList.add('is-checked');
+    }
+
+    updateSummary();
+  }
+
+  function adjustQty(delta) {
+    quantity = Math.max(1000, quantity + delta);
+    document.getElementById('qty-display').textContent = quantity.toLocaleString();
+    updateSummary();
+  }
+
+  function computeTotal() {
+    const base     = (order.mailer    ? order.mailer.price    : 0)
+                   + (order.artStyle  ? order.artStyle.price  : 0);
+    const dataAmt  = selectedDataSet ? (selectedDataSet.pricePerK * quantity / 1000) : 0;
+    const addOnAmt = selectedAddOns.reduce((s, a) => s + a.price, 0);
+    return { base, dataAmt, addOnAmt, total: base + dataAmt + addOnAmt };
+  }
+
+  function updateSummary() {
+    const hasSel = !!selectedDataSet;
+    document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
+
+    if (hasSel) {
+      const { base, dataAmt, addOnAmt, total } = computeTotal();
+
+      document.getElementById('step-val-3').textContent   = selectedDataSet.name.split(' — ')[0];
+      document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
+      document.getElementById('next-btn').removeAttribute('disabled');
+
+      let breakdown = `
+        <div class="summary-item">
+          <div class="summary-item__top">
+            <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
+          </div>
+          <div class="summary-item__meta">
+            <span class="summary-item__tag">${order.categoryLabel || ''}</span>
+            <span class="summary-item__price">$${(order.mailer ? order.mailer.price : 0).toLocaleString()}</span>
+          </div>
+          ${order.artStyle && order.artStyle.price > 0 ? `
+            <div class="summary-item__sub-line">
+              <span>Art Upgrade</span>
+              <span>+$${order.artStyle.price}</span>
+            </div>
+          ` : ''}
+          <div class="summary-item__sub-line">
+            <span>Data: ${selectedDataSet.name.split(' — ')[0]} (${quantity.toLocaleString()} pcs)</span>
+            <span>+$${dataAmt.toLocaleString()}</span>
+          </div>
+          ${selectedAddOns.map(ao => `
+            <div class="summary-item__sub-line">
+              <span>${ao.name}</span>
+              <span>+$${ao.price}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      document.getElementById('summary-breakdown').innerHTML = breakdown;
+    } else {
+      document.getElementById('next-btn').setAttribute('disabled', true);
+      document.getElementById('summary-breakdown').innerHTML = `
+        <div class="order-summary__empty">
+          <div class="order-summary__empty-icon">📊</div>
+          <p>Select a data set to see your full pricing breakdown.</p>
+        </div>
+      `;
+    }
+  }
+
+  function goNext() {
+    if (!selectedDataSet) return;
+
+    const { total } = computeTotal();
+    order.dataOption  = selectedDataSet;
+    order.addOns      = selectedAddOns;
+    order.quantity    = quantity;
+    order.total       = total;
+    sessionStorage.setItem('order', JSON.stringify(order));
+    window.location.href = 'confirm.html';
+  }
+
+  // ─── Init ───
+  renderDataSets();
+  renderAddOns();
+  updateSummary();
+</script>
+
+</body>
+</html>

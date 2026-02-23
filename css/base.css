@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════════════════
+   base.css — Variables, Reset, Typography
+   J Franco Marketing
+═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  /* Brand Colors */
+  --red:          #D9042B;
+  --red-hover:    #b5002a;
+  --red-soft:     rgba(217, 4, 43, 0.08);
+  --red-mid:      rgba(217, 4, 43, 0.15);
+  --red-border:   rgba(217, 4, 43, 0.30);
+
+  /* Neutrals */
+  --dark:         #28303d;
+  --dark-80:      rgba(40, 48, 61, 0.80);
+  --light:        #f7f5f2;
+  --white:        #ffffff;
+  --grey-soft:    #edeae5;
+  --grey-mid:     #b8b4ad;
+  --grey-text:    #6b7280;
+  --grey-muted:   #9ca3af;
+
+  /* Typography */
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Shadows */
+  --shadow-sm:    0 2px 8px rgba(40, 48, 61, 0.07);
+  --shadow:       0 4px 24px rgba(40, 48, 61, 0.10);
+  --shadow-lg:    0 12px 48px rgba(40, 48, 61, 0.16);
+  --shadow-red:   0 8px 24px rgba(217, 4, 43, 0.35);
+
+  /* Radii */
+  --radius-sm:    8px;
+  --radius:       12px;
+  --radius-lg:    16px;
+  --radius-pill:  100px;
+
+  /* Spacing */
+  --space-xs:     8px;
+  --space-sm:     16px;
+  --space-md:     24px;
+  --space-lg:     32px;
+  --space-xl:     48px;
+  --space-2xl:    64px;
+
+  /* Transitions */
+  --ease:         0.25s ease;
+  --ease-spring:  0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--light);
+  color: var(--dark);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Typography Scale ─── */
+.t-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.t-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  line-height: 0.93;
+}
+
+.t-display--xl  { font-size: clamp(52px, 8vw, 96px); }
+.t-display--lg  { font-size: clamp(40px, 6vw, 72px); }
+.t-display--md  { font-size: clamp(28px, 4vw, 42px); }
+.t-display--sm  { font-size: 22px; }
+
+.t-body-lg   { font-size: 16px; font-weight: 300; line-height: 1.65; }
+.t-body      { font-size: 14px; font-weight: 300; line-height: 1.6; }
+.t-body-sm   { font-size: 12px; font-weight: 300; line-height: 1.55; }
+.t-body-xs   { font-size: 10px; font-weight: 400; line-height: 1.5; }
+
+.t-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ─── Color Utilities ─── */
+.text-red    { color: var(--red); }
+.text-dark   { color: var(--dark); }
+.text-muted  { color: var(--grey-text); }
+.text-mid    { color: var(--grey-mid); }
+.text-white  { color: var(--white); }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--grey-soft); border-radius: 2px; }

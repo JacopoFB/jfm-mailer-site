@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Order — J Franco Marketing</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/summary.css">
+  <link rel="stylesheet" href="./css/animations.css">
+  <style>
+    /* Confirm-page specific styles */
+    .confirm-page-body {
+      padding: var(--space-xl) var(--space-md);
+      background: var(--light);
+      min-height: calc(100vh - 180px);
+    }
+
+    .confirm-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: var(--space-lg);
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .confirm-grid { grid-template-columns: 1fr; }
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.06em;
+      color: var(--dark);
+      margin-bottom: var(--space-sm);
+    }
+
+    .form-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--grey-soft);
+      padding: var(--space-md);
+      margin-bottom: var(--space-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-card__heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--grey-soft);
+    }
+
+    .form-card__heading-icon {
+      font-size: 18px;
+    }
+
+    .form-card__heading-text {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      color: var(--dark);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    /* Order review panel */
+    .review-panel {
+      position: sticky;
+      top: 20px;
+    }
+
+    .review-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--grey-soft);
+      gap: 12px;
+    }
+
+    .review-line:last-of-type { border-bottom: none; }
+
+    .review-line__label {
+      font-size: 12px;
+      color: var(--grey-text);
+      flex: 1;
+    }
+
+    .review-line__val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      text-align: right;
+    }
+
+    .review-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--space-sm);
+      margin-top: var(--space-sm);
+      border-top: 2px solid var(--dark);
+    }
+
+    .review-total-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey-text);
+    }
+
+    .review-total-value {
+      font-family: var(--font-display);
+      font-size: 36px;
+      color: var(--red);
+      letter-spacing: 0.02em;
+    }
+
+    .terms-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--light);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--grey-soft);
+      transition: border-color var(--ease);
+    }
+
+    .terms-check:hover { border-color: var(--red-border); }
+    .terms-check.is-checked { border-color: var(--red); }
+
+    .terms-check input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--red);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .terms-check__text {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--grey-text);
+      line-height: 1.55;
+    }
+
+    .terms-check__text a { color: var(--red); text-decoration: underline; }
+
+    /* Success screen */
+    #success-screen {
+      display: none;
+      text-align: center;
+      padding: var(--space-2xl) var(--space-md);
+      max-width: 560px;
+      margin: 0 auto;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    #success-screen.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ SITE HEADER ═══ -->
+<header class="site-header">
+  <a href="index.html" class="site-logo">
+    <div class="site-logo__img--placeholder">JF</div>
+    <span class="site-logo__name">J Franco <span>Marketing</span></span>
+  </a>
+  <div class="site-header__right">
+    <span class="site-header__contact t-body-xs text-muted">Questions? Call us</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ PROGRESS BAR ═══ -->
+<nav class="progress-bar">
+  <div class="progress-bar__inner">
+    <div class="progress-step progress-step--done">
+      <span class="progress-step__num">✓</span>
+      <span class="progress-step__label">Select Mailer</span>
+    </div>
+    <div class="progress-step progress-step--done">
+      <span class="progress-step__num">✓</span>
+      <span class="progress-step__label">Art Style</span>
+    </div>
+    <div class="progress-step progress-step--done">
+      <span class="progress-step__num">✓</span>
+      <span class="progress-step__label">Data & Options</span>
+    </div>
+    <div class="progress-step progress-step--active">
+      <span class="progress-step__num">4</span>
+      <span class="progress-step__label">Confirm & Order</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ PAGE HEADER ═══ -->
+<div class="page-header">
+  <div class="page-header__inner">
+    <a href="javascript:history.back()" class="page-header__back">← Back to Data Options</a>
+    <p class="t-eyebrow page-header__eyebrow">Step 4 of 4 · Final Review</p>
+    <h1 class="t-display t-display--lg page-header__title">Review & <em>Confirm</em></h1>
+    <p class="t-body page-header__sub">Almost done. Fill in your contact details and we'll have a rep reach out within one business day to finalize your campaign.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ORDER FORM ═══ -->
+<div class="confirm-page-body">
+  <div class="confirm-grid anim-fade-up" id="order-form-wrap">
+
+    <!-- LEFT: Form -->
+    <div>
+
+      <!-- Contact Info -->
+      <div class="form-card">
+        <div class="form-card__heading">
+          <span class="form-card__heading-text">Your Contact Information</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name *</label>
+              <input type="text" class="form-input" id="f-firstname" placeholder="Jane" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name *</label>
+              <input type="text" class="form-input" id="f-lastname" placeholder="Smith" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" class="form-input" id="f-email" placeholder="jane@dealership.com" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" class="form-input" id="f-phone" placeholder="(555) 000-0000" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Best Time to Reach</label>
+              <select class="form-select" id="f-time">
+                <option value="">Select...</option>
+                <option>Morning (9am – 12pm)</option>
+                <option>Afternoon (12pm – 5pm)</option>
+                <option>Evening (5pm – 7pm)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Info -->
+      <div class="form-card">
+        <div class="form-card__heading">
+          <span class="form-card__heading-text">Business Details</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Dealership / Business Name *</label>
+            <input type="text" class="form-input" id="f-business" placeholder="Acme Auto Group" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input type="text" class="form-input" id="f-city" placeholder="Dallas">
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <select class="form-select" id="f-state">
+                <option value="">Select...</option>
+                <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+                <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+                <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
+                <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
+                <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+                <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
+                <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
+                <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
+                <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
+                <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+                <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
+                <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
+                <option>WI</option><option>WY</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Drop Date / Timeline</label>
+            <input type="text" class="form-input" id="f-date" placeholder="e.g., End of March, ASAP, No preference">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Additional Notes</label>
+            <textarea class="form-textarea" id="f-notes" placeholder="Anything else your rep should know — offer details, VIN exclusions, upload instructions, etc."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="form-card">
+        <label class="terms-check" id="terms-wrap" onclick="toggleTerms()">
+          <input type="checkbox" id="f-terms" onclick="event.stopPropagation()">
+          <span class="terms-check__text">
+            I understand this is a campaign inquiry and not a finalized purchase. A J Franco Marketing representative will contact me to confirm details, provide a formal quote, and collect payment before any work begins.
+          </span>
+        </label>
+      </div>
+
+      <button class="btn btn--primary btn--lg btn--full" id="submit-btn" onclick="submitOrder()" disabled style="font-size:14px; padding:18px;">
+        Submit Campaign Request →
+      </button>
+
+    </div>
+
+    <!-- RIGHT: Order Review -->
+    <div class="review-panel">
+      <div class="confirm-card">
+        <div class="confirm-card__header">
+          <span class="confirm-card__header-title">Order Summary</span>
+          <span class="badge badge--red" id="review-cat-badge">—</span>
+        </div>
+        <div class="confirm-card__body" id="review-body">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <div class="form-card" style="background: var(--dark); border-color: var(--dark);">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span style="font-size:22px">🔒</span>
+          <span style="font-family:var(--font-display);font-size:16px;letter-spacing:0.06em;color:white;">No Payment Required Now</span>
+        </div>
+        <p class="t-body-sm" style="color:var(--grey-mid)">Submit your request and a rep will finalize your campaign details, send proofs, and collect payment once you're ready to move forward.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Success Screen -->
+  <div id="success-screen">
+    <div class="success-icon anim-pop-in">✓</div>
+    <h2 class="t-display t-display--md" style="margin-bottom:12px">Request Submitted!</h2>
+    <p class="t-body text-muted" style="max-width:400px;margin:0 auto 32px">
+      Your campaign request has been received. A J Franco Marketing rep will contact you within one business day to review, confirm, and get you on the schedule.
+    </p>
+    <a href="index.html" class="btn btn--dark btn--lg" onclick="sessionStorage.clear()">Start a New Campaign</a>
+  </div>
+
+</div>
+
+<script>
+  // ─── Load order from sessionStorage ───
+  let order = {};
+  const saved = sessionStorage.getItem('order');
+  if (saved) order = JSON.parse(saved);
+
+  if (!order.mailer || !order.artStyle || !order.dataOption) {
+    window.location.href = 'index.html';
+  }
+
+  // ─── Render Review Panel ───
+  function renderReview() {
+    document.getElementById('review-cat-badge').textContent = order.categoryLabel || '—';
+
+    const addOnsTotal = (order.addOns || []).reduce((s, a) => s + a.price, 0);
+    const dataTotal   = order.dataOption ? (order.dataOption.pricePerK * (order.quantity || 5000) / 1000) : 0;
+    const artAdder    = order.artStyle   ? (order.artStyle.price || 0) : 0;
+    const base        = order.mailer     ? order.mailer.price : 0;
+    const grandTotal  = base + artAdder + dataTotal + addOnsTotal;
+
+    let html = `
+      <div class="review-line">
+        <span class="review-line__label">Mailer</span>
+        <span class="review-line__val">${order.mailer ? order.mailer.name : '—'}</span>
+      </div>
+      <div class="review-line">
+        <span class="review-line__label">Base Price</span>
+        <span class="review-line__val">$${(order.mailer ? order.mailer.price : 0).toLocaleString()}</span>
+      </div>
+      <div class="review-line">
+        <span class="review-line__label">Art Style</span>
+        <span class="review-line__val">${order.artStyle ? order.artStyle.name : '—'}</span>
+      </div>
+      ${artAdder > 0 ? `
+        <div class="review-line">
+          <span class="review-line__label">Art Upgrade</span>
+          <span class="review-line__val">+$${artAdder}</span>
+        </div>
+      ` : ''}
+      <div class="review-line">
+        <span class="review-line__label">Data Set</span>
+        <span class="review-line__val">${order.dataOption ? order.dataOption.name.split(' — ')[0] : '—'}</span>
+      </div>
+      <div class="review-line">
+        <span class="review-line__label">Volume</span>
+        <span class="review-line__val">${(order.quantity || 5000).toLocaleString()} pieces</span>
+      </div>
+      <div class="review-line">
+        <span class="review-line__label">Data Cost</span>
+        <span class="review-line__val">$${dataTotal.toLocaleString()}</span>
+      </div>
+    `;
+
+    if (order.addOns && order.addOns.length > 0) {
+      html += `<div class="review-line"><span class="review-line__label" style="font-weight:600;color:var(--dark)">Add-Ons</span><span></span></div>`;
+      order.addOns.forEach(ao => {
+        html += `
+          <div class="review-line">
+            <span class="review-line__label">${ao.name}</span>
+            <span class="review-line__val">+$${ao.price.toLocaleString()}</span>
+          </div>
+        `;
+      });
+    }
+
+    html += `
+      <div class="review-total-row">
+        <span class="review-total-label">Estimated Total</span>
+        <span class="review-total-value">$${grandTotal.toLocaleString()}</span>
+      </div>
+    `;
+
+    document.getElementById('review-body').innerHTML = html;
+  }
+
+  // ─── Terms toggle ───
+  function toggleTerms() {
+    const cb    = document.getElementById('f-terms');
+    const wrap  = document.getElementById('terms-wrap');
+    cb.checked = !cb.checked;
+    wrap.classList.toggle('is-checked', cb.checked);
+    validateForm();
+  }
+
+  // ─── Validate ───
+  function validateForm() {
+    const required = ['f-firstname', 'f-lastname', 'f-email', 'f-phone', 'f-business'];
+    const filled   = required.every(id => document.getElementById(id).value.trim() !== '');
+    const terms    = document.getElementById('f-terms').checked;
+    document.getElementById('submit-btn').toggleAttribute('disabled', !(filled && terms));
+  }
+
+  document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
+    el.addEventListener('input', validateForm);
+    el.addEventListener('change', validateForm);
+  });
+
+  // ─── Submit ───
+  function submitOrder() {
+    const payload = {
+      contact: {
+        firstName : document.getElementById('f-firstname').value,
+        lastName  : document.getElementById('f-lastname').value,
+        email     : document.getElementById('f-email').value,
+        phone     : document.getElementById('f-phone').value,
+        bestTime  : document.getElementById('f-time').value,
+      },
+      business: {
+        name     : document.getElementById('f-business').value,
+        city     : document.getElementById('f-city').value,
+        state    : document.getElementById('f-state').value,
+        dropDate : document.getElementById('f-date').value,
+        notes    : document.getElementById('f-notes').value,
+      },
+      campaign: order
+    };
+
+    console.log('Order Payload:', JSON.stringify(payload, null, 2));
+    // TODO: POST payload to your backend / CRM endpoint
+
+    document.getElementById('order-form-wrap').style.display = 'none';
+    document.querySelector('.page-header').style.display      = 'none';
+    document.querySelector('.confirm-page-body').style.display = 'flex';
+    document.querySelector('.confirm-page-body').style.justifyContent = 'center';
+    document.getElementById('success-screen').classList.add('active');
+  }
+
+  // ─── Init ───
+  renderReview();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+/* ═══════════════════════════════════════════════════════
+   layout.css — Site Header, Page Zones, Grid, Progress
+   J Franco Marketing
+═══════════════════════════════════════════════════════ */
+
+/* ─── Site Header (top bar across all inner pages) ─── */
+.site-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--grey-soft);
+  padding: 0 var(--space-lg);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.site-logo__img {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  /* Placeholder shown until real logo is placed */
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-logo__img--placeholder {
+  background: var(--dark);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.site-logo__name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  color: var(--dark);
+}
+
+.site-logo__name span {
+  color: var(--red);
+}
+
+.site-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.site-header__contact {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--grey-text);
+}
+
+/* ─── Progress Bar ─── */
+.progress-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--grey-soft);
+  padding: 0 var(--space-lg);
+}
+
+.progress-bar__inner {
+  display: flex;
+  align-items: stretch;
+  max-width: 100%;
+  overflow-x: auto;
+  gap: 0;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 14px 0;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.progress-step + .progress-step::before {
+  content: '›';
+  color: var(--grey-mid);
+  font-size: 18px;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.progress-step__num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: var(--grey-soft);
+  color: var(--grey-text);
+  transition: background var(--ease), color var(--ease);
+}
+
+.progress-step__label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--grey-mid);
+  transition: color var(--ease);
+  white-space: nowrap;
+}
+
+.progress-step--active .progress-step__num {
+  background: var(--red);
+  color: var(--white);
+}
+
+.progress-step--active .progress-step__label {
+  color: var(--dark);
+}
+
+.progress-step--done .progress-step__num {
+  background: var(--dark);
+  color: var(--white);
+}
+
+.progress-step--done .progress-step__label {
+  color: var(--grey-text);
+}
+
+/* ─── Page Header (dark hero band on inner pages) ─── */
+.page-header {
+  background: var(--dark);
+  padding: var(--space-lg) var(--space-lg) var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--red-mid) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 30%;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.page-header__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+}
+
+.page-header__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--grey-mid);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: var(--space-md);
+  transition: color var(--ease);
+  text-decoration: none;
+}
+
+.page-header__back:hover { color: var(--white); }
+
+.page-header__eyebrow {
+  margin-bottom: 10px;
+}
+
+.page-header__title {
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.page-header__title em {
+  color: var(--red);
+  font-style: normal;
+}
+
+.page-header__sub {
+  color: var(--grey-mid);
+  max-width: 520px;
+}
+
+/* ─── Two-Column Page Body ─── */
+.page-body {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  min-height: calc(100vh - 180px);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .page-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Gallery Section (left column) ─── */
+.gallery-section {
+  padding: var(--space-lg);
+  background: var(--light);
+}
+
+.gallery-section__heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-md);
+}
+
+.gallery-section__heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--grey-soft);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.gallery-grid--art {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.gallery-grid--data {
+  grid-template-columns: 1fr;
+  max-width: 680px;
+}
+
+/* ─── Landing Page Layout ─── */
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.landing::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 480px; height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--red-soft) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.landing::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(40,48,61,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.landing__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  width: 100%;
+  max-width: 960px;
+}
+
+.landing__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: var(--space-xl);
+}
+
+.landing__logo-img {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius);
+  object-fit: contain;
+}
+
+.landing__logo-img--placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius);
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.landing__logo-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.06em;
+  color: var(--dark);
+  text-align: left;
+  line-height: 1;
+}
+
+.landing__logo-name span {
+  color: var(--red);
+}
+
+.landing__eyebrow {
+  margin-bottom: var(--space-sm);
+}
+
+.landing__title {
+  color: var(--dark);
+  margin-bottom: var(--space-sm);
+}
+
+.landing__title em {
+  color: var(--red);
+  font-style: normal;
+}
+
+.landing__sub {
+  color: var(--grey-text);
+  max-width: 420px;
+  margin: 0 auto var(--space-xl);
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+/* ─── Confirm Page Layout ─── */
+.confirm-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.confirm-layout__inner {
+  width: 100%;
+  max-width: 680px;
+}
