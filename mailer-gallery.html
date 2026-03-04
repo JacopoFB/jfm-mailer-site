@@ -259,11 +259,7 @@ window.onload = async function() {
 
     // append the mailers to the data
     const mailerData = await loadSheet(catKey);
-    console.log(catKey);
-    console.log(mailerData);
     catData["mailers"] = mailerData;
-
-    console.log(catData);
 
     selectedMailer = null;
 
@@ -297,22 +293,29 @@ function closePreview() {
 }
 
 // Render PDF thumb
-function renderPDFThumbnail(url, canvasId) {
-    const canvas = document.getElementById(canvasId);
-    const ctx = canvas.getContext('2d');
+function renderPDFThumbnail(previewUrl, imgId) {
+    const img = document.getElementById(imgId);
+    if (!img) return;
 
-    pdfjsLib.getDocument(url).promise.then(pdf => {
-        pdf.getPage(1).then(page => {
-            const viewport = page.getViewport({ scale: 2 });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+    img.src = previewUrl;
+    img.alt = "PDF preview";
+}
 
-            page.render({
-                canvasContext: ctx,
-                viewport: viewport
-            });
-        });
-    });
+function getDrivePreviewLink(sharedLink) {
+    const match = sharedLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (!match) {
+        console.warn("Invalid Google Drive link:", sharedLink);
+        return sharedLink; // fallback to original
+    }
+    const fileId = match[1];
+    return `https://drive.google.com/file/d/${fileId}/preview`;
+}
+function getDriveImageLink(sharedLink) {
+    const match = sharedLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (!match) return sharedLink; // fallback
+
+    const fileId = match[1];
+    return `https://drive.google.com/thumbnail?id=${fileId}`;
 }
 
 // Render tiles
@@ -324,25 +327,26 @@ function renderTiles() {
             <div class="mailer-tile${sel ? ' is-selected' : ''}" id="tile-${m.name}" onclick="selectMailer('${m.name}')">
                 <span class="tile-badge">✓ Selected</span>
                 <div class="tile-img">
-                    <canvas id="pdf-thumb-${m.name}"></canvas>
+                    <img id="pdf-thumb-${m.name}">
                 </div>
                 <div class="tile-body">
                     <div class="tile-name">${m.name}</div>
                     <div class="tile-desc">${m.description}</div>
                     <div class="tile-footer">
-                    <div class="tile-price">
-                        <div class="tile-price__label">Base Price</div>
-                        <div class="tile-price__value">$${m.price.toLocaleString()}</div>
-                        <div class="tile-price__unit">per campaign</div>
-                    </div>
-                    <div>
-                        <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
-                            Select This Mailer
-                        </button>
-                        <button class="btn btn--outline btn--sm"
-                            onclick="openPreview('./${m.PDF_URL}'); event.stopPropagation()">
-                            Preview
-                        </button>
+                        <div class="tile-price">
+                            <div class="tile-price__label">Base Price</div>
+                            <div class="tile-price__value">$${m.price.toLocaleString()}</div>
+                            <div class="tile-price__unit">per campaign</div>
+                        </div>
+                        <div>
+                            <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
+                                Select This Mailer
+                            </button>
+                            <button class="btn btn--outline btn--sm"
+                                onclick="openPreview('${getDrivePreviewLink(m.PDF_URL)}'); event.stopPropagation()">
+                                Preview
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -350,7 +354,7 @@ function renderTiles() {
     }).join('');
 
     catData.mailers.forEach(m => {
-        renderPDFThumbnail(`./${m.PDF_URL}`, `pdf-thumb-${m.name}`);
+        renderPDFThumbnail(`${getDriveImageLink(m.Preview)}`, `pdf-thumb-${m.name}`);
     });
 }
 
