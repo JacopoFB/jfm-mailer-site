@@ -417,20 +417,20 @@
             list.innerHTML = ADD_ONS.map(ao => {
                 const checked = selectedAddOns.some(a => a.id === ao.id);
                 return `
-        <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.id}" onclick="toggleAddOn('${ao.id}')">
-          <div class="add-on-item__left">
-            <span class="add-on-item__icon">${ao.icon}</span>
-            <div class="add-on-item__info">
-              <div class="add-on-item__name">${ao.name}</div>
-              <div class="add-on-item__desc">${ao.desc}</div>
-            </div>
-          </div>
-          <div class="add-on-item__right">
-            <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
-            <div class="checkbox">✓</div>
-          </div>
-        </div>
-      `;
+                    <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.id}" onclick="toggleAddOn('${ao.id}')">
+                    <div class="add-on-item__left">
+                        <span class="add-on-item__icon">${ao.icon}</span>
+                        <div class="add-on-item__info">
+                        <div class="add-on-item__name">${ao.name}</div>
+                        <div class="add-on-item__desc">${ao.desc}</div>
+                        </div>
+                    </div>
+                    <div class="add-on-item__right">
+                        <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
+                        <div class="checkbox">✓</div>
+                    </div>
+                    </div>
+                `;
             }).join('');
         }
 

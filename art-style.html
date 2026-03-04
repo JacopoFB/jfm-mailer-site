@@ -166,93 +166,73 @@
     </div>
 
     <script>
-        // ─── Art Style Data ───
-        const ART_STYLES = [
-            {
-                id: 'modern',
-                name: 'Modern Dark',
-                desc: 'Bold, dark backgrounds with red accents. High contrast, premium feel. Works great for conquest and credit mailers.',
-                previewClass: 'art-preview--modern',
-                tags: ['Dark Theme', 'High Impact', 'Premium'],
-                adderLabel: 'Included',
-                price: 0
-            },
-            {
-                id: 'clean',
-                name: 'Clean & Minimal',
-                desc: 'Light, airy layout with clean whitespace. Trusted, approachable feel. Best for letters and multi-piece kits.',
-                previewClass: 'art-preview--clean',
-                tags: ['Light Theme', 'Professional', 'Letter Friendly'],
-                adderLabel: 'Included',
-                price: 0
-            },
-            {
-                id: 'bold',
-                name: 'Bold & Energetic',
-                desc: 'Full-bleed color, oversized typography, high urgency. Perfect for event campaigns and saturation blitzes.',
-                previewClass: 'art-preview--bold',
-                tags: ['High Energy', 'Event Ready', 'Saturation'],
-                adderLabel: 'Included',
-                price: 0
-            },
-            {
-                id: 'classic',
-                name: 'Classic Professional',
-                desc: 'Traditional business-letter style. Conservative, authoritative. Ideal for BK, financial, and credit campaigns.',
-                previewClass: 'art-preview--classic',
-                tags: ['Conservative', 'BK Friendly', 'Trust-Building'],
-                adderLabel: 'Included',
-                price: 0
-            },
-            {
-                id: 'luxury',
-                name: 'Luxury Gold',
-                desc: 'Gold foil accents on deep backgrounds. Premium positioning for high-ticket inventory and VIP outreach.',
-                previewClass: 'art-preview--luxury',
-                tags: ['Gold Accents', 'VIP Feel', 'High-Ticket'],
-                adderLabel: '+$150',
-                price: 150
-            },
-            {
-                id: 'urgent',
-                name: 'Urgent Response',
-                desc: 'Red and dark urgency-focused layout. Time-sensitive offer framing. Best for end-of-month and clearance events.',
-                previewClass: 'art-preview--urgent',
-                tags: ['Urgency', 'Time-Sensitive', 'Clearance'],
-                adderLabel: 'Included',
-                price: 0
-            },
-        ];
+        const GOOGLE_SHEET_ID = "1n-_CUr9HXY1x9UD3mMOMcHZ7gpt1k8-Q64X3I-_iyp8";
 
-        // ─── State ───
-        let order = {};
-        const saved = sessionStorage.getItem('order');
-        if (saved) order = JSON.parse(saved);
+        async function loadSheet(sheetname) {
+            const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetname)}&headers=1`;
 
-        if (!order.mailer) {
-            window.location.href = 'index.html';
+            const res = await fetch(url);
+            const text = await res.text();
+
+            // Google wraps JSON in a weird callback
+            const json = JSON.parse(text.substring(47).slice(0, -2));
+
+            const rows = json.table.rows;
+            const headers = json.table.cols.map(col => col.label);
+
+            return rows.map(row => {
+                const obj = {};
+                    row.c.forEach((cell, i) => {
+                    obj[headers[i]] = cell ? cell.v : "";
+                });
+                return obj;
+            });
         }
 
-        let selectedStyle = order.artStyle || null;
+        let order;
+        let saved;
+        let selectedStyle;
+        let ART_STYLES;
 
-        // Populate step tracker
-        document.getElementById('step-val-1').textContent = order.mailer ? order.mailer.name : '—';
-        if (selectedStyle) document.getElementById('step-val-2').textContent = selectedStyle.name;
+        window.onload = async function() {
+            // load artstyle data
+            const data = await loadSheet("Art");
+            ART_STYLES = data;
+
+            order = {};
+            saved = sessionStorage.getItem('order');
+            if (saved) order = JSON.parse(saved);
+
+            if (!order.mailer) {
+                window.location.href = 'index.html';
+            }
+
+            selectedStyle = order.artStyle || null;
+
+            // Populate step tracker
+            document.getElementById('step-val-1').textContent = order.mailer ? order.mailer.name : '—';
+            if (selectedStyle) document.getElementById('step-val-2').textContent = selectedStyle.name;
+
+            // ─── Run ───
+            renderArtTiles();
+            updateSummary();
+        }
 
         // ─── Render ───
         function renderArtTiles() {
             const grid = document.getElementById('art-grid');
             grid.innerHTML = ART_STYLES.map(style => {
-                const sel = selectedStyle && selectedStyle.id === style.id;
+                style.tags = style.tags.split(",");
+                const sel = selectedStyle && selectedStyle.name === style.name;
                 return `
-                    <div class="art-tile${sel ? ' is-selected' : ''}" id="art-${style.id}" onclick="selectStyle('${style.id}')">
+                    <div class="art-tile${sel ? ' is-selected' : ''}" id="art-${style.name}" onclick="selectStyle('${style.name}')">
                         <span class="art-tile__badge">✓ Selected</span>
                         <div class="tile-img">
                             <img src="./images/test-img.jpg" alt="${style.name}">
                         </div>
                         <div class="art-tile__body">
                             <div class="art-tile__name">${style.name}</div>
-                            <div class="art-tile__desc">${style.desc}</div>
+                            <div class="art-tile__desc">${style.description}</div>
                             <div class="tile-footer">
                             <div class="art-tile__tags">
                                 ${style.tags.map(t => `<span class="badge badge--grey">${t}</span>`).join('')}
@@ -265,13 +245,13 @@
             }).join('');
         }
 
-        function selectStyle(id) {
-            const style = ART_STYLES.find(s => s.id === id);
+        function selectStyle(name) {
+            const style = ART_STYLES.find(s => s.name === name);
             if (!style) return;
             selectedStyle = style;
 
             document.querySelectorAll('.art-tile').forEach(t => t.classList.remove('is-selected'));
-            document.getElementById(`art-${id}`).classList.add('is-selected');
+            document.getElementById(`art-${name}`).classList.add('is-selected');
 
             updateSummary();
         }
@@ -316,10 +296,6 @@
             sessionStorage.setItem('order', JSON.stringify(order));
             window.location.href = 'data-options.html';
         }
-
-        // ─── Run ───
-        renderArtTiles();
-        updateSummary();
     </script>
 
 </body>

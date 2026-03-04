@@ -34,42 +34,7 @@
             </p>
 
             <!-- Category Grid -->
-            <div class="category-grid stagger-children">
-
-                <a href="mailer-gallery.html?cat=buyback" class="cat-card">
-                    <span class="cat-card__icon">🔄</span>
-                    <span class="cat-card__arrow">→</span>
-                    <div class="cat-card__label">Buyback</div>
-                    <div class="cat-card__desc">Re-engage past customers with targeted buyback campaigns</div>
-                </a>
-
-                <a href="mailer-gallery.html?cat=credit" class="cat-card">
-                    <span class="cat-card__icon">💳</span>
-                    <span class="cat-card__arrow">→</span>
-                    <div class="cat-card__label">Credit</div>
-                    <div class="cat-card__desc">Pre-approved credit mailers designed to convert leads</div>
-                </a>
-
-                <a href="mailer-gallery.html?cat=bk" class="cat-card">
-                    <span class="cat-card__icon">🏦</span>
-                    <span class="cat-card__arrow">→</span>
-                    <div class="cat-card__label">BK</div>
-                    <div class="cat-card__desc">Bankruptcy-specific campaigns reaching qualified prospects</div>
-                </a>
-
-                <a href="mailer-gallery.html?cat=saturation" class="cat-card">
-                    <span class="cat-card__icon">📍</span>
-                    <span class="cat-card__arrow">→</span>
-                    <div class="cat-card__label">Saturation</div>
-                    <div class="cat-card__desc">Blanket your target zip codes with high-volume mailers</div>
-                </a>
-
-                <a href="mailer-gallery.html?cat=email-only" class="cat-card">
-                    <span class="cat-card__icon">📧</span>
-                    <span class="cat-card__arrow">→</span>
-                    <div class="cat-card__label">Email Only</div>
-                    <div class="cat-card__desc">Digital-first campaigns for data-driven email outreach</div>
-                </a>
+            <div class="category-grid stagger-children" id="campaigns">
 
             </div>
             <!-- /category-grid -->
@@ -78,5 +43,70 @@
     </main>
 
 </body>
+<script>
+// -- GET DATA FROM GOOGLE SHEET SOURCE --
 
+const GOOGLE_SHEET_ID = "1n-_CUr9HXY1x9UD3mMOMcHZ7gpt1k8-Q64X3I-_iyp8";
+
+async function loadSheet(sheetname) {
+    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetname)}&headers=1`;
+
+    const res = await fetch(url);
+    const text = await res.text();
+
+    // Google wraps JSON in a weird callback
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+
+    const rows = json.table.rows;
+    const headers = json.table.cols.map(col => col.label);
+
+    return rows.map(row => {
+        const obj = {};
+            row.c.forEach((cell, i) => {
+            obj[headers[i]] = cell ? cell.v : "";
+        });
+        return obj;
+    });
+}
+
+async function loadCampaignList() {
+    const rows = await loadSheet("Campaigns");
+
+    return rows.map(row => ({
+        type: row.Type,                  // must match sheet name
+        label: row.Label,
+        subLabel: row["Sub-label"],
+        description: row.Description,
+        sheetName: row.Type.trim()
+    }));
+}
+
+function renderCampaigns(campaigns) {
+    const container = document.getElementById("campaigns");
+    container.innerHTML = "";
+
+    campaigns.forEach(campaign => {
+        const slug = campaign.type
+            .toLowerCase()
+            .replace(/\s+/g, "-");
+
+        const card = document.createElement("a");
+        card.href = `mailer-gallery?cat=${slug}`;
+        card.className = "cat-card";
+
+        card.innerHTML = `
+            <span class="cat-card__arrow">→</span>
+            <div class="cat-card__label">${campaign.label}</div>
+            <div class="cat-card__desc">${campaign.description}</div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+window.onload = async function() {
+    const campaigns = await loadCampaignList();
+    renderCampaigns(campaigns);
+}
+</script>
 </html>

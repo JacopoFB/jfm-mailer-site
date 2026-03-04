@@ -135,209 +135,270 @@
 
         <div class="pdf-modal" id="pdfModal">
             <div class="pdf-modal__content">
-                <button class="pdf-modal__close" onclick="closePreview()">✕</button>
+                <div class="pdf-modal__close">
+                    <button onclick="closePreview()">✕</button>
+                </div>
                 <iframe id="pdfFrame" src="" frameborder="0"></iframe>
             </div>
         </div>
     </div>
-    <!-- /page-body -->
-
-    <script>
-        // ─── Mailer Data by Category ───
-        const CATEGORIES = {
-            buyback: {
-                label: 'Buyback Campaign',
-                eyebrow: 'Buyback · Step 1 of 4',
-                sub: 'Re-engage your database with proven buyback mailers. Targeted to past buyers, conquest lists, or equity-positive customers.',
-                mailers: [
-                    { id: 'bb1', name: 'Equity Advantage', desc: 'Targets customers with positive equity. Premium card-stock, personalized vehicle line.', price: 1249, icon: '🚗' },
-                    { id: 'bb2', name: 'Trade-Up Plus', desc: 'Conquest and buyback hybrid — great for multi-vehicle households with upgrade intent.', price: 899, icon: '🔄' },
-                    { id: 'bb3', name: 'VIP Buyback Letter', desc: 'High-response letter format with personal dealer signature and exclusive offer code.', price: 699, icon: '✉️' },
-                    { id: 'bb4', name: 'Postcard Blitz', desc: '6×9 postcard, bold design, great for saturation-style buyback runs.', price: 549, icon: '📮' },
-                ]
-            },
-            credit: {
-                label: 'Credit Campaign',
-                eyebrow: 'Credit · Step 1 of 4',
-                sub: 'Pre-approved and pre-qualified credit mailers that convert. Compliance-ready messaging with high open rates.',
-                mailers: [
-                    { id: 'cr1', name: 'Pre-Approval Gold', desc: 'Gold envelope + letter with pre-approval certificate. Highest open rates in portfolio.', price: 1399, icon: '🥇', pdf: "./products/JenkinsAutoGroup-LY-LTR-P1.pdf" },
-                ]
-            },
-            bk: {
-                label: 'BK Campaign',
-                eyebrow: 'Bankruptcy · Step 1 of 4',
-                sub: 'Reach bankruptcy-coded households with empathetic, compliance-ready messaging that drives action.',
-                mailers: [
-                    { id: 'bk1', name: 'Fresh Start Letter', desc: 'Chapter 7 & 13 targeting. Warm, empathetic copy with clear financing path forward.', price: 949, icon: '🌱' },
-                    { id: 'bk2', name: 'Second Chance Card', desc: 'Oversized postcard with bold "Second Chance" messaging. Perfect for discharged filers.', price: 749, icon: '🔑' },
-                    { id: 'bk3', name: 'Discharged & Ready', desc: 'Targets post-discharge BK with time-sensitive offer. Urgency-focused copy.', price: 849, icon: '⏱️' },
-                    { id: 'bk4', name: 'BK Conquest Plus', desc: 'Conquest lists around your BK customers — adjacent credit profiles in your market.', price: 1099, icon: '📍' },
-                ]
-            },
-            saturation: {
-                label: 'Saturation Campaign',
-                eyebrow: 'Saturation · Step 1 of 4',
-                sub: 'Blanket entire zip codes or carrier routes with high-volume mailers. Maximum reach, minimum cost per piece.',
-                mailers: [
-                    { id: 'sat1', name: 'EDDM Postcard — Standard', desc: '6.5×9 every-door direct mail postcard. Great for event-driven and clearance campaigns.', price: 399, icon: '📬' },
-                    { id: 'sat2', name: 'EDDM Postcard — Oversized', desc: '8.5×11 jumbo postcard. Stands out in the mailbox. Ideal for grand openings.', price: 549, icon: '📰' },
-                    { id: 'sat3', name: 'Neighborhood Dominator', desc: 'Full saturation bundle: EDDM + follow-up to movers and new homeowners.', price: 899, icon: '🏘️' },
-                    { id: 'sat4', name: 'Event Blitz', desc: 'Time-sensitive saturation for tent events, holidays, or end-of-month pushes.', price: 649, icon: '🎪' },
-                    { id: 'sat5', name: 'Zip Code Conquest', desc: 'Hand-pick up to 10 zip codes. Data-matched for income and vehicle ownership.', price: 1149, icon: '🗺️' },
-                ]
-            },
-            'email-only': {
-                label: 'Email-Only Campaign',
-                eyebrow: 'Email Only · Step 1 of 4',
-                sub: 'Data-driven digital campaigns delivered to verified inboxes. No print, no postage — just results.',
-                mailers: [
-                    { id: 'em1', name: 'Conquest Email Blast', desc: '50K–100K verified consumer emails in your target market. Deploy in 24–48 hours.', price: 699, icon: '⚡' },
-                    { id: 'em2', name: 'In-Market Email Series', desc: '3-email drip targeting in-market shoppers. Auto-sequenced, personalized subject lines.', price: 999, icon: '📨' },
-                    { id: 'em3', name: 'BDC Lead Match Email', desc: 'Upload your BDC CRM list — we match & deploy to verified email addresses on file.', price: 849, icon: '🔗' },
-                    { id: 'em4', name: 'Retargeting Email Drop', desc: 'Website visitor retargeting via email. Cookie-matched list appended with email.', price: 1199, icon: '🎯' },
-                ]
-            }
-        };
-
-        // ─── Init ───
-        const params = new URLSearchParams(window.location.search);
-        const catKey = params.get('cat') || 'buyback';
-        const catData = CATEGORIES[catKey] || CATEGORIES.buyback;
-
-        let selectedMailer = null;
-
-        // Restore from sessionStorage if coming back
-        const saved = sessionStorage.getItem('order');
-        if (saved) {
-            const order = JSON.parse(saved);
-            if (order.mailer && order.category === catKey) {
-                selectedMailer = order.mailer;
-            }
-        }
-
-        // Populate page header
-        document.getElementById('cat-eyebrow').textContent = catData.eyebrow;
-        document.getElementById('cat-title').textContent = catData.label;
-        document.getElementById('cat-sub').textContent = catData.sub;
-
-        function openPreview(url) {
-            document.getElementById('pdfFrame').src = url;
-            document.getElementById('pdfModal').classList.add('active');
-        }
-
-        function closePreview() {
-            document.getElementById('pdfModal').classList.remove('active');
-            document.getElementById('pdfFrame').src = '';
-        }
-
-        // Render PDF thumb
-        function renderPDFThumbnail(url, canvasId) {
-            const canvas = document.getElementById(canvasId);
-            const ctx = canvas.getContext('2d');
-
-            pdfjsLib.getDocument(url).promise.then(pdf => {
-                pdf.getPage(1).then(page => {
-                    const viewport = page.getViewport({ scale: 0.5 });
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    page.render({
-                        canvasContext: ctx,
-                        viewport: viewport
-                    });
-                });
-            });
-        }
-
-        // Render tiles
-        function renderTiles() {
-            const grid = document.getElementById('mailer-grid');
-            grid.innerHTML = catData.mailers.map(m => {
-                const sel = selectedMailer && selectedMailer.id === m.id;
-                return `
-                    <div class="mailer-tile${sel ? ' is-selected' : ''}" id="tile-${m.id}" onclick="selectMailer('${m.id}')">
-                        <span class="tile-badge">✓ Selected</span>
-                        <div class="tile-img">
-                            <canvas id="pdf-thumb-${m.id}"></canvas>
-                        </div>
-                        <div class="tile-body">
-                            <div class="tile-name">${m.name}</div>
-                            <div class="tile-desc">${m.desc}</div>
-                            <div class="tile-footer">
-                            <div class="tile-price">
-                                <div class="tile-price__label">Base Price</div>
-                                <div class="tile-price__value">$${m.price.toLocaleString()}</div>
-                                <div class="tile-price__unit">per campaign</div>
-                            </div>
-                            <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.id}'); event.stopPropagation()">
-                                Select This Mailer
-                            </button>
-                            <button class="btn btn--outline btn--sm"
-                                onclick="openPreview('./${m.pdf}'); event.stopPropagation()">
-                                Preview
-                            </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            catData.mailers.forEach(m => {
-                renderPDFThumbnail(`./${m.pdf}`, `pdf-thumb-${m.id}`);
-            });
-        }
-
-        function selectMailer(id) {
-            const mailer = catData.mailers.find(m => m.id === id);
-            if (!mailer) return;
-
-            selectedMailer = mailer;
-
-            // Update tiles
-            document.querySelectorAll('.mailer-tile').forEach(t => t.classList.remove('is-selected'));
-            document.getElementById(`tile-${id}`).classList.add('is-selected');
-
-            updateSummary();
-        }
-
-        function updateSummary() {
-            const hasSelection = !!selectedMailer;
-
-            document.getElementById('summary-empty').style.display = hasSelection ? 'none' : 'block';
-            document.getElementById('summary-footer').style.display = hasSelection ? 'block' : 'none';
-
-            if (hasSelection) {
-                document.getElementById('summary-total').textContent = `$${selectedMailer.price.toLocaleString()}`;
-                document.getElementById('step-val-1').textContent = selectedMailer.name;
-                document.getElementById('next-btn').removeAttribute('disabled');
-            } else {
-                document.getElementById('next-btn').setAttribute('disabled', true);
-            }
-        }
-
-        function goNext() {
-            if (!selectedMailer) return;
-
-            // Persist to sessionStorage
-            const existing = sessionStorage.getItem('order');
-            const order = existing ? JSON.parse(existing) : {};
-            order.category = catKey;
-            order.categoryLabel = catData.label;
-            order.mailer = selectedMailer;
-            // Clear downstream selections when mailer changes
-            delete order.artStyle;
-            delete order.dataOption;
-            sessionStorage.setItem('order', JSON.stringify(order));
-
-            window.location.href = 'art-style.html';
-        }
-
-        // ─── Run ───
-        renderTiles();
-        updateSummary();
-    </script>
-
 </body>
+
+<script>
+// ─── Mailer Data by Category ───
+const CATEGORIES = {
+    buyback: {
+        label: 'Buyback Campaign',
+        eyebrow: 'Buyback · Step 1 of 4',
+        sub: 'Re-engage your database with proven buyback mailers. Targeted to past buyers, conquest lists, or equity-positive customers.',
+        mailers: [
+            { id: 'bb1', name: 'Equity Advantage', desc: 'Targets customers with positive equity. Premium card-stock, personalized vehicle line.', price: 1249, icon: '🚗' },
+            { id: 'bb2', name: 'Trade-Up Plus', desc: 'Conquest and buyback hybrid — great for multi-vehicle households with upgrade intent.', price: 899, icon: '🔄' },
+            { id: 'bb3', name: 'VIP Buyback Letter', desc: 'High-response letter format with personal dealer signature and exclusive offer code.', price: 699, icon: '✉️' },
+            { id: 'bb4', name: 'Postcard Blitz', desc: '6×9 postcard, bold design, great for saturation-style buyback runs.', price: 549, icon: '📮' },
+        ]
+    },
+    credit: {
+        label: 'Credit Campaign',
+        eyebrow: 'Credit · Step 1 of 4',
+        sub: 'Pre-approved and pre-qualified credit mailers that convert. Compliance-ready messaging with high open rates.',
+        mailers: [
+            { id: 'cr1', name: 'Pre-Approval Gold', desc: ' ', price: 1399, pdf: "./products/JenkinsAutoGroup-LY-LTR-P1.pdf" },
+        ]
+    },
+    bk: {
+        label: 'BK Campaign',
+        eyebrow: 'Bankruptcy · Step 1 of 4',
+        sub: 'Reach bankruptcy-coded households with empathetic, compliance-ready messaging that drives action.',
+        mailers: [
+            { id: 'bk1', name: 'Fresh Start Letter', desc: 'Chapter 7 & 13 targeting. Warm, empathetic copy with clear financing path forward.', price: 949, icon: '🌱' },
+            { id: 'bk2', name: 'Second Chance Card', desc: 'Oversized postcard with bold "Second Chance" messaging. Perfect for discharged filers.', price: 749, icon: '🔑' },
+            { id: 'bk3', name: 'Discharged & Ready', desc: 'Targets post-discharge BK with time-sensitive offer. Urgency-focused copy.', price: 849, icon: '⏱️' },
+            { id: 'bk4', name: 'BK Conquest Plus', desc: 'Conquest lists around your BK customers — adjacent credit profiles in your market.', price: 1099, icon: '📍' },
+        ]
+    },
+    saturation: {
+        label: 'Saturation Campaign',
+        eyebrow: 'Saturation · Step 1 of 4',
+        sub: 'Blanket entire zip codes or carrier routes with high-volume mailers. Maximum reach, minimum cost per piece.',
+        mailers: [
+            { id: 'sat1', name: 'EDDM Postcard — Standard', desc: '6.5×9 every-door direct mail postcard. Great for event-driven and clearance campaigns.', price: 399, icon: '📬' },
+            { id: 'sat2', name: 'EDDM Postcard — Oversized', desc: '8.5×11 jumbo postcard. Stands out in the mailbox. Ideal for grand openings.', price: 549, icon: '📰' },
+            { id: 'sat3', name: 'Neighborhood Dominator', desc: 'Full saturation bundle: EDDM + follow-up to movers and new homeowners.', price: 899, icon: '🏘️' },
+            { id: 'sat4', name: 'Event Blitz', desc: 'Time-sensitive saturation for tent events, holidays, or end-of-month pushes.', price: 649, icon: '🎪' },
+            { id: 'sat5', name: 'Zip Code Conquest', desc: 'Hand-pick up to 10 zip codes. Data-matched for income and vehicle ownership.', price: 1149, icon: '🗺️' },
+        ]
+    },
+    'email-only': {
+        label: 'Email-Only Campaign',
+        eyebrow: 'Email Only · Step 1 of 4',
+        sub: 'Data-driven digital campaigns delivered to verified inboxes. No print, no postage — just results.',
+        mailers: [
+            { id: 'em1', name: 'Conquest Email Blast', desc: '50K-100K verified consumer emails in your target market. Deploy in 24–48 hours.', price: 699, icon: '⚡' },
+            { id: 'em2', name: 'In-Market Email Series', desc: '3-email drip targeting in-market shoppers. Auto-sequenced, personalized subject lines.', price: 999, icon: '📨' },
+            { id: 'em3', name: 'BDC Lead Match Email', desc: 'Upload your BDC CRM list — we match & deploy to verified email addresses on file.', price: 849, icon: '🔗' },
+            { id: 'em4', name: 'Retargeting Email Drop', desc: 'Website visitor retargeting via email. Cookie-matched list appended with email.', price: 1199, icon: '🎯' },
+        ]
+    }
+};
+
+// -- GET DATA FROM GOOGLE SHEET SOURCE --
+
+const GOOGLE_SHEET_ID = "1n-_CUr9HXY1x9UD3mMOMcHZ7gpt1k8-Q64X3I-_iyp8";
+
+async function loadSheet(sheetname) {
+    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetname)}&headers=1`;
+
+    const res = await fetch(url);
+    const text = await res.text();
+
+    // Google wraps JSON in a weird callback
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+
+    const rows = json.table.rows;
+    const headers = json.table.cols.map(col => col.label);
+
+    return rows.map(row => {
+        const obj = {};
+            row.c.forEach((cell, i) => {
+            obj[headers[i]] = cell ? cell.v : "";
+        });
+        return obj;
+    });
+}
+
+async function loadCampaignList() {
+    const rows = await loadSheet("Campaigns");
+
+    return rows.map(row => ({
+        type: row.Type,                  // must match sheet name
+        label: row.Label,
+        subLabel: row["Sub-label"],
+        description: row.Description,
+        sheetName: row.Type.trim()
+    }));
+}
+
+// ─── Init ───
+let catData;
+let catKey;
+let selectedMailer;
+
+window.onload = async function() {
+    const params = new URLSearchParams(window.location.search);
+    catKey = params.get('cat') || 'buyback';
+    catData = CATEGORIES[catKey] || CATEGORIES.buyback;
+
+    // load data from google sheets
+    const campaignData = await loadCampaignList();
+
+    // match current catKey to category from data source
+    campaignData.forEach(campaign => {
+        if (campaign.type.toLowerCase() == catKey.toLowerCase()) catData = campaign;
+    });
+
+    // append the mailers to the data
+    const mailerData = await loadSheet(catKey);
+    console.log(catKey);
+    console.log(mailerData);
+    catData["mailers"] = mailerData;
+
+    console.log(catData);
+
+    selectedMailer = null;
+
+    // Restore from sessionStorage if coming back
+    const saved = sessionStorage.getItem('order');
+    if (saved) {
+        const order = JSON.parse(saved);
+        if (order.mailer && order.category === catKey) {
+            selectedMailer = order.mailer;
+        }
+    }
+
+    // Populate page header
+    document.getElementById('cat-eyebrow').textContent = catData.subLabel;
+    document.getElementById('cat-title').textContent = catData.label;
+    document.getElementById('cat-sub').textContent = catData.description;
+
+    // ─── Run ───
+    renderTiles();
+    updateSummary();
+}
+
+function openPreview(url) {
+    document.getElementById('pdfFrame').src = url;
+    document.getElementById('pdfModal').classList.add('active');
+}
+
+function closePreview() {
+    document.getElementById('pdfModal').classList.remove('active');
+    document.getElementById('pdfFrame').src = '';
+}
+
+// Render PDF thumb
+function renderPDFThumbnail(url, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+        pdf.getPage(1).then(page => {
+            const viewport = page.getViewport({ scale: 2 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            page.render({
+                canvasContext: ctx,
+                viewport: viewport
+            });
+        });
+    });
+}
+
+// Render tiles
+function renderTiles() {
+    const grid = document.getElementById('mailer-grid');
+    grid.innerHTML = catData.mailers.map(m => {
+        const sel = selectedMailer && selectedMailer.id === m.id;
+        return `
+            <div class="mailer-tile${sel ? ' is-selected' : ''}" id="tile-${m.name}" onclick="selectMailer('${m.name}')">
+                <span class="tile-badge">✓ Selected</span>
+                <div class="tile-img">
+                    <canvas id="pdf-thumb-${m.name}"></canvas>
+                </div>
+                <div class="tile-body">
+                    <div class="tile-name">${m.name}</div>
+                    <div class="tile-desc">${m.description}</div>
+                    <div class="tile-footer">
+                    <div class="tile-price">
+                        <div class="tile-price__label">Base Price</div>
+                        <div class="tile-price__value">$${m.price.toLocaleString()}</div>
+                        <div class="tile-price__unit">per campaign</div>
+                    </div>
+                    <div>
+                        <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
+                            Select This Mailer
+                        </button>
+                        <button class="btn btn--outline btn--sm"
+                            onclick="openPreview('./${m.PDF_URL}'); event.stopPropagation()">
+                            Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    catData.mailers.forEach(m => {
+        renderPDFThumbnail(`./${m.PDF_URL}`, `pdf-thumb-${m.name}`);
+    });
+}
+
+function selectMailer(name) {
+    const mailer = catData.mailers.find(m => m.name === name);
+    if (!mailer) return;
+
+    selectedMailer = mailer;
+
+    // Update tiles
+    document.querySelectorAll('.mailer-tile').forEach(t => t.classList.remove('is-selected'));
+    document.getElementById(`tile-${name}`).classList.add('is-selected');
+
+    updateSummary();
+}
+
+function updateSummary() {
+    const hasSelection = !!selectedMailer;
+
+    document.getElementById('summary-empty').style.display = hasSelection ? 'none' : 'block';
+    document.getElementById('summary-footer').style.display = hasSelection ? 'block' : 'none';
+
+    if (hasSelection) {
+        document.getElementById('summary-total').textContent = `$${selectedMailer.price.toLocaleString()}`;
+        document.getElementById('step-val-1').textContent = selectedMailer.name;
+        document.getElementById('next-btn').removeAttribute('disabled');
+    } else {
+        document.getElementById('next-btn').setAttribute('disabled', true);
+    }
+}
+
+function goNext() {
+    if (!selectedMailer) return;
+
+    // Persist to sessionStorage
+    const existing = sessionStorage.getItem('order');
+    const order = existing ? JSON.parse(existing) : {};
+    order.category = catKey;
+    order.categoryLabel = catData.label;
+    order.mailer = selectedMailer;
+    // Clear downstream selections when mailer changes
+    delete order.artStyle;
+    delete order.dataOption;
+    sessionStorage.setItem('order', JSON.stringify(order));
+
+    window.location.href = 'art-style.html';
+}
+
+</script>
 
 </html>
