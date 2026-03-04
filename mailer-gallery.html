@@ -310,12 +310,15 @@ function getDrivePreviewLink(sharedLink) {
     const fileId = match[1];
     return `https://drive.google.com/file/d/${fileId}/preview`;
 }
-function getDriveImageLink(sharedLink) {
+function getDriveImageLink(sharedLink, size = 500) {
     const match = sharedLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (!match) return sharedLink; // fallback
+    if (!match) return sharedLink;
 
     const fileId = match[1];
-    return `https://drive.google.com/thumbnail?id=${fileId}`;
+
+    // s0 = original size
+    // s1200 = 1200px wide version
+    return `https://lh3.googleusercontent.com/d/${fileId}=s${size}`;
 }
 
 // Render tiles
