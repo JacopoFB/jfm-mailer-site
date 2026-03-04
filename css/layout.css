@@ -126,6 +126,57 @@
     color: var(--grey-text);
 }
 
+/* Hide mobile version on desktop */
+.progress-mobile {
+    display: none;
+}
+
+/* ─── Mobile Progress ─── */
+@media (max-width: 768px) {
+    .progress-bar__inner {
+        display: none; /* hide desktop steps */
+    }
+
+    .progress-mobile {
+        display: block;
+        padding: 16px 0;
+    }
+
+    .progress-mobile__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .progress-mobile__step {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--grey-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .progress-mobile__label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .progress-mobile__track {
+        height: 6px;
+        background: var(--grey-soft);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .progress-mobile__fill {
+        height: 100%;
+        background: var(--red);
+        transition: width 0.3s ease;
+    }
+}
+
 /* ─── Page Header (dark hero band on inner pages) ─── */
 .page-header {
     background: var(--dark);
