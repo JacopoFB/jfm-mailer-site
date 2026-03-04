@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/summary.css">
     <link rel="stylesheet" href="./css/animations.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 
 <body>
@@ -131,6 +133,12 @@
             </div>
         </aside>
 
+        <div class="pdf-modal" id="pdfModal">
+            <div class="pdf-modal__content">
+                <button class="pdf-modal__close" onclick="closePreview()">✕</button>
+                <iframe id="pdfFrame" src="" frameborder="0"></iframe>
+            </div>
+        </div>
     </div>
     <!-- /page-body -->
 
@@ -153,11 +161,7 @@
                 eyebrow: 'Credit · Step 1 of 4',
                 sub: 'Pre-approved and pre-qualified credit mailers that convert. Compliance-ready messaging with high open rates.',
                 mailers: [
-                    { id: 'cr1', name: 'Pre-Approval Gold', desc: 'Gold envelope + letter with pre-approval certificate. Highest open rates in portfolio.', price: 1399, icon: '🥇' },
-                    { id: 'cr2', name: 'Check Mailer', desc: 'Live check-style mailer for high urgency response. Proven performer for subprime.', price: 1099, icon: '💰' },
-                    { id: 'cr3', name: 'Soft Pull Notice', desc: 'Soft pull credit notification letter — compliant, high-trust design with bureau badge.', price: 799, icon: '🔍' },
-                    { id: 'cr4', name: 'Credit Rebuild Card', desc: 'Targets credit rebuilders. Includes QR to soft-pull application landing page.', price: 649, icon: '📈' },
-                    { id: 'cr5', name: 'First-Time Buyer Kit', desc: 'Multi-piece kit for FTBs: letter + postcard + brochure insert. High perceived value.', price: 1599, icon: '🏆' },
+                    { id: 'cr1', name: 'Pre-Approval Gold', desc: 'Gold envelope + letter with pre-approval certificate. Highest open rates in portfolio.', price: 1399, icon: '🥇', pdf: "./products/JenkinsAutoGroup-LY-LTR-P1.pdf" },
                 ]
             },
             bk: {
@@ -217,6 +221,35 @@
         document.getElementById('cat-title').textContent = catData.label;
         document.getElementById('cat-sub').textContent = catData.sub;
 
+        function openPreview(url) {
+            document.getElementById('pdfFrame').src = url;
+            document.getElementById('pdfModal').classList.add('active');
+        }
+
+        function closePreview() {
+            document.getElementById('pdfModal').classList.remove('active');
+            document.getElementById('pdfFrame').src = '';
+        }
+
+        // Render PDF thumb
+        function renderPDFThumbnail(url, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                pdf.getPage(1).then(page => {
+                    const viewport = page.getViewport({ scale: 0.5 });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    page.render({
+                        canvasContext: ctx,
+                        viewport: viewport
+                    });
+                });
+            });
+        }
+
         // Render tiles
         function renderTiles() {
             const grid = document.getElementById('mailer-grid');
@@ -226,7 +259,7 @@
                     <div class="mailer-tile${sel ? ' is-selected' : ''}" id="tile-${m.id}" onclick="selectMailer('${m.id}')">
                         <span class="tile-badge">✓ Selected</span>
                         <div class="tile-img">
-                            <img src="./images/test-img.jpg" alt="${m.name}">
+                            <canvas id="pdf-thumb-${m.id}"></canvas>
                         </div>
                         <div class="tile-body">
                             <div class="tile-name">${m.name}</div>
@@ -240,11 +273,19 @@
                             <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.id}'); event.stopPropagation()">
                                 Select This Mailer
                             </button>
+                            <button class="btn btn--outline btn--sm"
+                                onclick="openPreview('./${m.pdf}'); event.stopPropagation()">
+                                Preview
+                            </button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            catData.mailers.forEach(m => {
+                renderPDFThumbnail(`./${m.pdf}`, `pdf-thumb-${m.id}`);
+            });
         }
 
         function selectMailer(id) {

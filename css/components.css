@@ -314,6 +314,13 @@
     object-fit: cover;
 }
 
+.tile-img canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* yes — this works on canvas */
+    display: block;
+}
+
 .tile-img-placeholder {
     width: 100%;
     height: 155px;
@@ -656,4 +663,40 @@
     justify-content: center;
     font-size: 30px;
     margin: 0 auto var(--space-md);
+}
+
+/* --- PDF Modal --- */
+.pdf-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.pdf-modal.active {
+    display: flex;
+}
+
+.pdf-modal__content {
+    width: 90%;
+    height: 90%;
+    background: white;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pdf-modal__content iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.pdf-modal__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
 }

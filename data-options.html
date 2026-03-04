@@ -392,22 +392,22 @@
             grid.innerHTML = DATA_SETS.map(ds => {
                 const sel = selectedDataSet && selectedDataSet.id === ds.id;
                 return `
-        <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.id}" onclick="selectDataSet('${ds.id}')">
-          <div class="data-option__left">
-            <div class="data-option__icon">${ds.icon}</div>
-            <div class="data-option__info">
-              <div class="data-option__name">${ds.name}</div>
-              <div class="data-option__desc">${ds.desc}</div>
-              <span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>
-            </div>
-          </div>
-          <div class="data-option__right">
-            <div class="data-option__price">$${ds.pricePerK}</div>
-            <div class="data-option__price-note">per 1,000 pieces</div>
-            <div class="data-option__check">✓</div>
-          </div>
-        </div>
-      `;
+                    <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.id}" onclick="selectDataSet('${ds.id}')">
+                    <div class="data-option__left">
+                        <div class="data-option__icon">${ds.icon}</div>
+                        <div class="data-option__info">
+                        <div class="data-option__name">${ds.name}</div>
+                        <div class="data-option__desc">${ds.desc}</div>
+                        <span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>
+                        </div>
+                    </div>
+                    <div class="data-option__right">
+                        <div class="data-option__price">$${ds.pricePerK}</div>
+                        <div class="data-option__price-note">per 1,000 pieces</div>
+                        <div class="data-option__check">✓</div>
+                    </div>
+                    </div>
+                `;
             }).join('');
         }
 
