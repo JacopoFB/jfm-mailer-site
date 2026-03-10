@@ -144,100 +144,8 @@
     </div>
 </body>
 
-<script>
-// ─── Mailer Data by Category ───
-const CATEGORIES = {
-    buyback: {
-        label: 'Buyback Campaign',
-        eyebrow: 'Buyback · Step 1 of 4',
-        sub: 'Re-engage your database with proven buyback mailers. Targeted to past buyers, conquest lists, or equity-positive customers.',
-        mailers: [
-            { id: 'bb1', name: 'Equity Advantage', desc: 'Targets customers with positive equity. Premium card-stock, personalized vehicle line.', price: 1249, icon: '🚗' },
-            { id: 'bb2', name: 'Trade-Up Plus', desc: 'Conquest and buyback hybrid — great for multi-vehicle households with upgrade intent.', price: 899, icon: '🔄' },
-            { id: 'bb3', name: 'VIP Buyback Letter', desc: 'High-response letter format with personal dealer signature and exclusive offer code.', price: 699, icon: '✉️' },
-            { id: 'bb4', name: 'Postcard Blitz', desc: '6×9 postcard, bold design, great for saturation-style buyback runs.', price: 549, icon: '📮' },
-        ]
-    },
-    credit: {
-        label: 'Credit Campaign',
-        eyebrow: 'Credit · Step 1 of 4',
-        sub: 'Pre-approved and pre-qualified credit mailers that convert. Compliance-ready messaging with high open rates.',
-        mailers: [
-            { id: 'cr1', name: 'Pre-Approval Gold', desc: ' ', price: 1399, pdf: "./products/JenkinsAutoGroup-LY-LTR-P1.pdf" },
-        ]
-    },
-    bk: {
-        label: 'BK Campaign',
-        eyebrow: 'Bankruptcy · Step 1 of 4',
-        sub: 'Reach bankruptcy-coded households with empathetic, compliance-ready messaging that drives action.',
-        mailers: [
-            { id: 'bk1', name: 'Fresh Start Letter', desc: 'Chapter 7 & 13 targeting. Warm, empathetic copy with clear financing path forward.', price: 949, icon: '🌱' },
-            { id: 'bk2', name: 'Second Chance Card', desc: 'Oversized postcard with bold "Second Chance" messaging. Perfect for discharged filers.', price: 749, icon: '🔑' },
-            { id: 'bk3', name: 'Discharged & Ready', desc: 'Targets post-discharge BK with time-sensitive offer. Urgency-focused copy.', price: 849, icon: '⏱️' },
-            { id: 'bk4', name: 'BK Conquest Plus', desc: 'Conquest lists around your BK customers — adjacent credit profiles in your market.', price: 1099, icon: '📍' },
-        ]
-    },
-    saturation: {
-        label: 'Saturation Campaign',
-        eyebrow: 'Saturation · Step 1 of 4',
-        sub: 'Blanket entire zip codes or carrier routes with high-volume mailers. Maximum reach, minimum cost per piece.',
-        mailers: [
-            { id: 'sat1', name: 'EDDM Postcard — Standard', desc: '6.5×9 every-door direct mail postcard. Great for event-driven and clearance campaigns.', price: 399, icon: '📬' },
-            { id: 'sat2', name: 'EDDM Postcard — Oversized', desc: '8.5×11 jumbo postcard. Stands out in the mailbox. Ideal for grand openings.', price: 549, icon: '📰' },
-            { id: 'sat3', name: 'Neighborhood Dominator', desc: 'Full saturation bundle: EDDM + follow-up to movers and new homeowners.', price: 899, icon: '🏘️' },
-            { id: 'sat4', name: 'Event Blitz', desc: 'Time-sensitive saturation for tent events, holidays, or end-of-month pushes.', price: 649, icon: '🎪' },
-            { id: 'sat5', name: 'Zip Code Conquest', desc: 'Hand-pick up to 10 zip codes. Data-matched for income and vehicle ownership.', price: 1149, icon: '🗺️' },
-        ]
-    },
-    'email-only': {
-        label: 'Email-Only Campaign',
-        eyebrow: 'Email Only · Step 1 of 4',
-        sub: 'Data-driven digital campaigns delivered to verified inboxes. No print, no postage — just results.',
-        mailers: [
-            { id: 'em1', name: 'Conquest Email Blast', desc: '50K-100K verified consumer emails in your target market. Deploy in 24–48 hours.', price: 699, icon: '⚡' },
-            { id: 'em2', name: 'In-Market Email Series', desc: '3-email drip targeting in-market shoppers. Auto-sequenced, personalized subject lines.', price: 999, icon: '📨' },
-            { id: 'em3', name: 'BDC Lead Match Email', desc: 'Upload your BDC CRM list — we match & deploy to verified email addresses on file.', price: 849, icon: '🔗' },
-            { id: 'em4', name: 'Retargeting Email Drop', desc: 'Website visitor retargeting via email. Cookie-matched list appended with email.', price: 1199, icon: '🎯' },
-        ]
-    }
-};
-
-// -- GET DATA FROM GOOGLE SHEET SOURCE --
-
-const GOOGLE_SHEET_ID = "1n-_CUr9HXY1x9UD3mMOMcHZ7gpt1k8-Q64X3I-_iyp8";
-
-async function loadSheet(sheetname) {
-    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetname)}&headers=1`;
-
-    const res = await fetch(url);
-    const text = await res.text();
-
-    // Google wraps JSON in a weird callback
-    const json = JSON.parse(text.substring(47).slice(0, -2));
-
-    const rows = json.table.rows;
-    const headers = json.table.cols.map(col => col.label);
-
-    return rows.map(row => {
-        const obj = {};
-            row.c.forEach((cell, i) => {
-            obj[headers[i]] = cell ? cell.v : "";
-        });
-        return obj;
-    });
-}
-
-async function loadCampaignList() {
-    const rows = await loadSheet("Campaigns");
-
-    return rows.map(row => ({
-        type: row.Type,                  // must match sheet name
-        label: row.Label,
-        subLabel: row["Sub-label"],
-        description: row.Description,
-        sheetName: row.Type.trim()
-    }));
-}
+<script type="module">
+import DataLoader from "/scripts/DataLoader.js";
 
 // ─── Init ───
 let catData;
@@ -247,10 +155,10 @@ let selectedMailer;
 window.onload = async function() {
     const params = new URLSearchParams(window.location.search);
     catKey = params.get('cat') || 'buyback';
-    catData = CATEGORIES[catKey] || CATEGORIES.buyback;
+    catData = [];
 
     // load data from google sheets
-    const campaignData = await loadCampaignList();
+    const campaignData = await DataLoader.loadCampaignList();
 
     // match current catKey to category from data source
     campaignData.forEach(campaign => {
@@ -258,7 +166,7 @@ window.onload = async function() {
     });
 
     // append the mailers to the data
-    const mailerData = await loadSheet(catKey);
+    const mailerData = await DataLoader.loadSheet(catKey);
     catData["mailers"] = mailerData;
 
     selectedMailer = null;
@@ -361,7 +269,7 @@ function renderTiles() {
     });
 }
 
-function selectMailer(name) {
+window.selectMailer = function(name) {
     const mailer = catData.mailers.find(m => m.name === name);
     if (!mailer) return;
 
@@ -374,7 +282,7 @@ function selectMailer(name) {
     updateSummary();
 }
 
-function updateSummary() {
+window.updateSummary = function() {
     const hasSelection = !!selectedMailer;
 
     document.getElementById('summary-empty').style.display = hasSelection ? 'none' : 'block';
@@ -389,7 +297,7 @@ function updateSummary() {
     }
 }
 
-function goNext() {
+window.goNext = function() {
     if (!selectedMailer) return;
 
     // Persist to sessionStorage

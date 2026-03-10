@@ -13,7 +13,6 @@
 </head>
 
 <body>
-
     <!-- ═══════════════════════════ LANDING ═══ -->
     <main class="landing">
         <div class="landing__inner">
@@ -24,88 +23,170 @@
             </div>
 
             <!-- Headline -->
-            <p class="t-eyebrow landing__eyebrow">Direct Mail Solutions · Step 1 of 4</p>
+            
             <h1 class="t-display t-display--xl landing__title">
-                Choose Your<br><em>Campaign</em>
+                Choose Your <em>Campaign</em>
             </h1>
             <p class="t-body landing__sub">
-                Select the marketing category that fits your outreach strategy. You'll customize art, data, and options
-                in the next steps.
+                Select the marketing category that fits your outreach strategy.
             </p>
 
-            <!-- Category Grid -->
-            <div class="category-grid stagger-children" id="campaigns">
-
+            <!-- ── Divider ── -->
+            <div class="grid-divider">
+                <span class="grid-divider__line"></span>
+                <span class="grid-divider__text">Direct Mail Categories</span>
+                <span class="grid-divider__line"></span>
             </div>
-            <!-- /category-grid -->
+
+            <!-- ── Category Grid (primary focus) ── -->
+            <div class="category-grid stagger-children" id="campaigns"></div>
+
+            <!-- ── Divider ── -->
+            <div class="grid-divider">
+                <span class="grid-divider__line"></span>
+                <span class="grid-divider__text">Lead Capture Technology</span>
+                <span class="grid-divider__line"></span>
+            </div>
+
+            <!-- ── Featured: Lead Capture Technology ── -->
+            <div class="featured-section">
+                <a href="lead-capture" class="cat-card cat-card--featured">
+                    
+                    <div class="cat-card__body">
+                        <div class="cat-card__eyebrow">LEAD CAPTURE TECHNOLOGY</div>
+                        <div class="cat-card__label">Quick2Credit</div>
+                        <div class="cat-card__desc">
+                            Sell Used and New Vehicles. Capture Pre-Qualified Buyers Before They
+                            Visit the Store. Receive Verified Contact Information and a Full Auto Loan Summary. AI
+                            Follow-Up Instantly Engages Leads and Sets Appointments.
+                        </div>
+                    </div>
+                    <span class="cat-card__arrow">›</span>
+                </a>
+            </div>
+
+            <!-- ── Textium Strip (secondary — collapsed by default) ── -->
+            <div class="textium-strip" id="textiumStrip">
+                <button
+                    class="textium-strip__toggle"
+                    aria-expanded="false"
+                    aria-controls="textiumPanel"
+                    onclick="
+                        var s = document.getElementById('textiumStrip');
+                        var open = s.classList.toggle('is-open');
+                        this.setAttribute('aria-expanded', open);
+                    "
+                >
+                    <span class="textium-strip__badge">Included</span>
+                    <span class="textium-strip__summary">
+                        Every campaign includes <em>Textium</em>: converts direct mail into verified mobile leads
+                    </span>
+                    <span class="textium-strip__chevron">▼</span>
+                </button>
+
+                <div class="textium-strip__panel" id="textiumPanel">
+                    <div class="textium-strip__copy">
+                        All campaigns include Textium response technology that converts direct mail into
+                        verified mobile leads and can <strong>increase response by up to 300%.</strong>
+                        Customers text their unique code, we capture their mobile number and instantly
+                        deliver the lead to your CRM for follow-up.
+                        <br><br>
+                        <span class="textium-strip__cta">
+                            Try it — text <span>FPRJGX</span> to <span>48498</span>
+                        </span>
+                    </div>
+
+                    <!-- Process Flow -->
+                    <div class="textium-strip__flow">
+
+                        <div class="flow-step">
+                            <div class="flow-step__img-wrap">
+                                <span class="flow-step__num">1</span>
+                                📬
+                            </div>
+                            <span class="flow-step__label">Mail Piece<br>Delivered</span>
+                        </div>
+
+                        <div class="flow-arrow">›</div>
+
+                        <div class="flow-step">
+                            <div class="flow-step__img-wrap">
+                                <span class="flow-step__num">2</span>
+                                📱
+                            </div>
+                            <span class="flow-step__label">Customer<br>Texts PIN</span>
+                        </div>
+
+                        <div class="flow-arrow">›</div>
+
+                        <div class="flow-step">
+                            <div class="flow-step__img-wrap">
+                                <span class="flow-step__num">3</span>
+                                💬
+                            </div>
+                            <span class="flow-step__label">Instant<br>Text Response</span>
+                        </div>
+
+                        <div class="flow-arrow">›</div>
+
+                        <div class="flow-step">
+                            <div class="flow-step__img-wrap">
+                                <span class="flow-step__num">4</span>
+                                📊
+                            </div>
+                            <span class="flow-step__label">Lead Lands<br>in CRM</span>
+                        </div>
+
+                        <div class="flow-arrow">›</div>
+
+                        <div class="flow-step">
+                            <div class="flow-step__img-wrap">
+                                <span class="flow-step__num">5</span>
+                                🤝
+                            </div>
+                            <span class="flow-step__label">Your Team<br>Follows Up</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- ── /Textium Strip ── -->
 
         </div>
     </main>
-
 </body>
-<script>
-// -- GET DATA FROM GOOGLE SHEET SOURCE --
 
-const GOOGLE_SHEET_ID = "1n-_CUr9HXY1x9UD3mMOMcHZ7gpt1k8-Q64X3I-_iyp8";
-
-async function loadSheet(sheetname) {
-    const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetname)}&headers=1`;
-
-    const res = await fetch(url);
-    const text = await res.text();
-
-    // Google wraps JSON in a weird callback
-    const json = JSON.parse(text.substring(47).slice(0, -2));
-
-    const rows = json.table.rows;
-    const headers = json.table.cols.map(col => col.label);
-
-    return rows.map(row => {
-        const obj = {};
-            row.c.forEach((cell, i) => {
-            obj[headers[i]] = cell ? cell.v : "";
-        });
-        return obj;
-    });
-}
-
-async function loadCampaignList() {
-    const rows = await loadSheet("Campaigns");
-
-    return rows.map(row => ({
-        type: row.Type,                  // must match sheet name
-        label: row.Label,
-        subLabel: row["Sub-label"],
-        description: row.Description,
-        sheetName: row.Type.trim()
-    }));
-}
+<script type="module">
+import DataLoader from "/scripts/DataLoader.js";
 
 function renderCampaigns(campaigns) {
     const container = document.getElementById("campaigns");
     container.innerHTML = "";
-
-    campaigns.forEach(campaign => {
+    campaigns.forEach((campaign, index) => {
         const slug = campaign.type
             .toLowerCase()
             .replace(/\s+/g, "-");
-
         const card = document.createElement("a");
         card.href = `mailer-gallery?cat=${slug}`;
         card.className = "cat-card";
-
         card.innerHTML = `
-            <span class="cat-card__arrow">→</span>
-            <div class="cat-card__label">${campaign.label}</div>
-            <div class="cat-card__desc">${campaign.description}</div>
+            <div class="cat-card__body">
+                <div class="cat-card__label">${campaign.label}</div>
+                <div class="cat-card__desc">${campaign.description}</div>
+            </div>
+            <span class="cat-card__arrow">›</span>
         `;
-
+        /*
+            <div class="cat-card__icon-wrap">
+                <span class="cat-card__icon">${String(index + 1).padStart(2, "0")}</span>
+            </div>
+        */
         container.appendChild(card);
     });
 }
 
 window.onload = async function() {
-    const campaigns = await loadCampaignList();
+    const campaigns = await DataLoader.loadCampaignList();
     renderCampaigns(campaigns);
 }
 </script>

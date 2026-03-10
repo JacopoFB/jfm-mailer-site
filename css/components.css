@@ -2,12 +2,12 @@
    components.css — Cards, Tiles, Buttons, Badges, Forms
 ═══════════════════════════════════════════════════════ */
 
-/* ─── Category Card (Step 1 Landing) ─── */
+/* ─── Category Card — Hero treatment ─── */
 .cat-card {
     background: var(--white);
     border: 1.5px solid var(--grey-soft);
     border-radius: var(--radius-lg);
-    padding: 28px 22px;
+    padding: 30px 24px 26px;
     cursor: pointer;
     transition: border-color var(--ease), box-shadow var(--ease), transform var(--ease);
     text-align: left;
@@ -17,70 +17,131 @@
     text-decoration: none;
     color: inherit;
 }
-
-.cat-card::after {
+.cat-card::before {
     content: '';
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 4px;
     background: var(--red);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform var(--ease);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
+.cat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, var(--red-soft) 0%, transparent 65%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
 .cat-card:hover {
     border-color: var(--red-border);
     box-shadow: var(--shadow-lg);
-    transform: translateY(-3px);
+    transform: translateY(-4px);
 }
-
-.cat-card:hover::after {
+.cat-card:hover::before {
     transform: scaleX(1);
 }
-
-.cat-card__icon {
-    font-size: 26px;
-    margin-bottom: 12px;
-    display: block;
+.cat-card:hover::after {
+    opacity: 1;
 }
-
+.cat-card__icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--grey-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    transition: background var(--ease), transform var(--ease);
+    position: relative;
+    z-index: 1;
+}
+.cat-card:hover .cat-card__icon-wrap {
+    background: var(--red-soft);
+    transform: scale(1.08);
+}
+.cat-card__icon {
+    font-size: 24px;
+    display: block;
+    line-height: 1;
+}
 .cat-card__arrow {
     position: absolute;
     top: 18px;
     right: 18px;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     background: var(--grey-soft);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    transition: background var(--ease), color var(--ease);
+    font-size: 13px;
+    transition: background var(--ease), color var(--ease), transform var(--ease);
     color: var(--grey-text);
+    z-index: 1;
 }
-
 .cat-card:hover .cat-card__arrow {
     background: var(--red);
     color: var(--white);
+    transform: translate(2px, -2px);
 }
-
 .cat-card__label {
     font-family: var(--font-display);
-    font-size: 20px;
+    font-size: 26px;
     letter-spacing: 0.04em;
     color: var(--dark);
     margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
 }
-
 .cat-card__desc {
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 300;
     color: var(--grey-text);
-    line-height: 1.5;
+    line-height: 1.55;
+    position: relative;
+    z-index: 1;
+}
+
+/* ─── Featured Card Variant ─── */
+.cat-card--featured {
+    border-color: var(--red-border);
+    background: linear-gradient(135deg, var(--white) 60%, var(--red-soft) 100%);
+    padding: 28px 26px;
+    text-align: left;
+}
+.cat-card--featured::before {
+    transform: scaleX(1);
+}
+.cat-card--featured .cat-card__icon-wrap {
+    background: var(--red-soft);
+}
+.cat-card--featured .cat-card__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+}
+.cat-card--featured .cat-card__label {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+.cat-card--featured .cat-card__desc {
+    font-size: 15px;
+    max-width: 420px;
+}
+.cat-card--featured:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
 }
 
 /* ─── Mailer Tile (Step 1 Gallery) ─── */
