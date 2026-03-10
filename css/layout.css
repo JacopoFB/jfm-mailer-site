@@ -594,8 +594,8 @@
         height: 46px;
     }
     .cat-card__body {
-        flex: 1;
-        min-width: 0;
+        position: relative;
+        padding-right: 40px;
     }
     .cat-card__label {
         font-size: 20px;
@@ -608,8 +608,9 @@
         display: none;
     }
     .cat-card__arrow {
-        top: 50%;
-        transform: translateY(-50%);
+        position: absolute;
+        top: 4px;
+        right: 0;
     }
     .cat-card:hover .cat-card__arrow {
         transform: translateY(-50%);
