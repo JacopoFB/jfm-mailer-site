@@ -233,6 +233,7 @@ function getDriveImageLink(sharedLink, size = 500) {
 function renderTiles() {
     const grid = document.getElementById('mailer-grid');
     grid.innerHTML = catData.mailers.map(m => {
+        console.log(m);
         const sel = selectedMailer && selectedMailer.id === m.id;
         return `
             <div class="mailer-tile${sel ? ' is-selected' : ''}" id="tile-${m.name}" onclick="selectMailer('${m.name}')">
@@ -245,9 +246,8 @@ function renderTiles() {
                     <div class="tile-desc">${m.description}</div>
                     <div class="tile-footer">
                         <div class="tile-price">
-                            <div class="tile-price__label">Base Price</div>
-                            <div class="tile-price__value">$${m.price.toLocaleString()}</div>
-                            <div class="tile-price__unit">per campaign</div>
+                            <div class="tile-price__label">Tier</div>
+                            <div class="tile-price__value">${m.shown_price}</div>
                         </div>
                         <div>
                             <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
@@ -289,7 +289,7 @@ window.updateSummary = function() {
     document.getElementById('summary-footer').style.display = hasSelection ? 'block' : 'none';
 
     if (hasSelection) {
-        document.getElementById('summary-total').textContent = `$${selectedMailer.price.toLocaleString()}`;
+        document.getElementById('summary-total').textContent = `${selectedMailer.shown_price.toLocaleString()}`;
         document.getElementById('step-val-1').textContent = selectedMailer.name;
         document.getElementById('next-btn').removeAttribute('disabled');
     } else {
@@ -306,6 +306,8 @@ window.goNext = function() {
     order.category = catKey;
     order.categoryLabel = catData.label;
     order.mailer = selectedMailer;
+    console.log(order);
+
     // Clear downstream selections when mailer changes
     delete order.artStyle;
     delete order.dataOption;
