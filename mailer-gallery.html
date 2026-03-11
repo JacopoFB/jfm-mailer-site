@@ -190,12 +190,12 @@ window.onload = async function() {
     updateSummary();
 }
 
-function openPreview(url) {
+window.openPreview = function(url) {
     document.getElementById('pdfFrame').src = url;
     document.getElementById('pdfModal').classList.add('active');
 }
 
-function closePreview() {
+window.closePreview = function() {
     document.getElementById('pdfModal').classList.remove('active');
     document.getElementById('pdfFrame').src = '';
 }
@@ -253,7 +253,7 @@ function renderTiles() {
                             <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
                                 Select This Mailer
                             </button>
-                            <button class="btn btn--outline btn--sm"
+                            <button class="btn btn--primary btn--sm"
                                 onclick="openPreview('${getDrivePreviewLink(m.PDF_URL)}'); event.stopPropagation()">
                                 Preview
                             </button>
