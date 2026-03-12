@@ -163,6 +163,19 @@
             </div>
         </aside>
     </div>
+
+    <!-- Sticky mobile CTA — appears after mailer selected -->
+    <div class="mobile-next-bar" id="mobile-next-bar">
+        <div class="mobile-next-bar__inner">
+            <div class="mobile-next-bar__info" style="width: 50%;">
+                <span class="mobile-next-bar__label">Selected:</span>
+                <span class="mobile-next-bar__name" id="mobile-next-name">—</span>
+            </div>
+            <button class="btn btn--primary btn--md" onclick="goNext()">
+                Next: Data & Options →
+            </button>
+        </div>
+    </div>
 </body>
 
 <script type="module">
@@ -238,13 +251,15 @@ window.updateSummary = function() {
     const hasSel = !!selectedStyle;
     document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
 
+    const mobileBar = document.getElementById('mobile-next-bar');
+    const nextBtn = document.getElementById('next-btn');
+
     if (hasSel) {
         const base = order.mailer ? order.mailer.price : 0;
         const total = base + (selectedStyle.price || 0);
         document.getElementById('summary-total').textContent = `${selectedStyle.name}`;
         document.getElementById('step-val-2').textContent = selectedStyle.name;
-        document.getElementById('next-btn').removeAttribute('disabled');
-
+        nextBtn.removeAttribute('disabled');
         document.getElementById('summary-items').innerHTML = `
             <div class="summary-item">
             <div class="summary-item__top">
@@ -256,8 +271,18 @@ window.updateSummary = function() {
             </div>
             </div>
         `;
+
+        // Mobile bar
+        document.getElementById('mobile-next-name').textContent = selectedStyle.name;
+        mobileBar.classList.add('is-visible');
+
+        // Desktop pulse
+        nextBtn.classList.remove('pulse');
+        void nextBtn.offsetWidth;
+        nextBtn.classList.add('pulse');
     } else {
-        document.getElementById('next-btn').setAttribute('disabled', true);
+        nextBtn.setAttribute('disabled', true);
+        mobileBar.classList.remove('is-visible');
     }
 }
 

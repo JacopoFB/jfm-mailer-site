@@ -163,9 +163,7 @@ function renderCampaigns(campaigns) {
     const container = document.getElementById("campaigns");
     container.innerHTML = "";
     campaigns.forEach((campaign, index) => {
-        const slug = campaign.type
-            .toLowerCase()
-            .replace(/\s+/g, "-");
+        const slug = campaign.type.toLowerCase().replace(/\s+/g, "-");
         const card = document.createElement("a");
         card.href = `mailer-gallery?cat=${slug}`;
         card.className = "cat-card";

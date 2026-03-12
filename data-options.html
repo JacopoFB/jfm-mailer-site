@@ -158,6 +158,138 @@
             border-color: var(--red);
             color: var(--white);
         }
+
+        .qty-tiles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .qty-tiles {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .qty-tile {
+            position: relative;
+            padding: var(--space-md);
+            background: var(--white);
+            border: 1.5px solid var(--grey-soft);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: border-color var(--ease), background var(--ease);
+            overflow: hidden;
+        }
+
+        .qty-tile:hover {
+            border-color: var(--red-border);
+        }
+
+        .qty-tile.is-selected {
+            border-color: var(--red);
+            background: rgba(217, 4, 43, 0.02);
+        }
+
+        .qty-tile .tile-badge {
+            display: none;
+        }
+
+        .qty-tile.is-selected .tile-badge {
+            display: block;
+        }
+
+        .qty-tile__num {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .qty-tile__label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+        }
+
+        .qty-tile__desc {
+            font-size: 12px;
+            font-weight: 300;
+            color: var(--grey-text);
+            line-height: 1.5;
+        }
+
+        .mobile-next-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 2px solid var(--color-primary, #1a56db);
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+            padding: 12px 16px;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-next-bar.is-visible {
+            transform: translateY(0);
+        }
+
+        .mobile-next-bar__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mobile-next-bar__label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            display: block;
+        }
+
+        .mobile-next-bar__name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #111;
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-next-bar {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 1023px) {
+            .mobile-next-bar {
+                display: block;
+            }
+            .page-body {
+                padding-bottom: 90px;
+            }
+        }
+
+        @keyframes pulse-cta {
+            0%   { box-shadow: 0 0 0 0 rgba(26,86,219,0.5); }
+            70%  { box-shadow: 0 0 0 10px rgba(26,86,219,0); }
+            100% { box-shadow: 0 0 0 0 rgba(26,86,219,0); }
+        }
+
+        #next-btn.pulse {
+            animation: pulse-cta 0.6s ease 2;
+        }
     </style>
 </head>
 
@@ -221,9 +353,34 @@
     <div class="page-body">
 
         <section class="gallery-section anim-fade-up">
-
-            <!-- Data Set Selection -->
+            <!-- Volume / Quantity — NOW FIRST -->
             <div class="gallery-section__heading">
+                <span class="t-label text-muted">Mailing Volume</span>
+            </div>
+
+            <div class="qty-tiles" id="qty-tiles">
+                <div class="qty-tile is-selected" id="qty-5000" onclick="selectQty(5000)">
+                    <div class="qty-tile__num">5,000</div>
+                    <div class="qty-tile__label">Market Test</div>
+                    <div class="qty-tile__desc">Ideal for testing a new offer or audience before scaling.</div>
+                    <span class="tile-badge">✓ Selected</span>
+                </div>
+                <div class="qty-tile" id="qty-10000" onclick="selectQty(10000)">
+                    <div class="qty-tile__num">10,000</div>
+                    <div class="qty-tile__label">Strong Coverage</div>
+                    <div class="qty-tile__desc">Solid reach across your target market with proven volume.</div>
+                    <span class="tile-badge">✓ Selected</span>
+                </div>
+                <div class="qty-tile" id="qty-15000" onclick="selectQty(15000)">
+                    <div class="qty-tile__num">15,000</div>
+                    <div class="qty-tile__label">Market Dominance</div>
+                    <div class="qty-tile__desc">Maximum saturation — own your market area this campaign cycle.</div>
+                    <span class="tile-badge">✓ Selected</span>
+                </div>
+            </div>
+
+            <!-- Data Set Selection — NOW SECOND -->
+            <div class="gallery-section__heading" style="margin-top: var(--space-lg)">
                 <span class="t-label text-muted">Choose Your Data Set</span>
             </div>
 
@@ -231,40 +388,13 @@
                 <!-- Injected by JS -->
             </div>
 
-            <!-- Volume / Quantity -->
-            <div class="add-ons-section">
-                <div class="gallery-section__heading" style="margin-top: var(--space-lg)">
-                    <span class="t-label text-muted">Mailing Volume</span>
-                </div>
-
-                <div class="qty-selector">
-                    <div class="qty-selector__label">
-                        Number of Pieces<br>
-                        <span class="t-body-xs text-muted">Minimum 1,000 · Price adjusts per thousand</span>
-                    </div>
-                    <div class="qty-selector__controls">
-                        <button class="qty-btn" onclick="adjustQty(-1000)">−</button>
-                        <div>
-                            <div class="qty-value" id="qty-display">5,000</div>
-                            <div class="qty-unit" style="text-align:center">pieces</div>
-                        </div>
-                        <button class="qty-btn" onclick="adjustQty(1000)">+</button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Add-On Options -->
             <div class="add-ons-section">
                 <div class="gallery-section__heading">
-                    <span class="t-label text-muted">Campaign Add-Ons <span class="badge badge--grey"
-                            style="margin-left:6px;">Optional</span></span>
+                    <span class="t-label text-muted">Campaign Add-Ons <span class="badge badge--grey" style="margin-left:6px;">Optional</span></span>
                 </div>
-
-                <div id="addons-list">
-                    <!-- Injected by JS -->
-                </div>
+                <div id="addons-list"></div>
             </div>
-
         </section>
 
         <!-- Order Summary -->
@@ -303,7 +433,7 @@
 
             <div class="order-summary__footer" id="summary-footer" style="display:none">
                 <div class="order-summary__total-row">
-                    <span class="order-summary__total-label">Campaign Total</span>
+                    <span class="order-summary__total-label">Data Set</span>
                     <span class="order-summary__total-value" id="summary-total">$0</span>
                 </div>
                 <button class="btn btn--primary btn--lg btn--full" id="next-btn" onclick="goNext()" disabled>
@@ -313,238 +443,233 @@
             </div>
         </aside>
 
+        <div class="mobile-next-bar" id="mobile-next-bar">
+            <div class="mobile-next-bar__inner">
+                <div class="mobile-next-bar__info" style="width: 50%;">
+                    <span class="mobile-next-bar__label">Selected:</span>
+                    <span class="mobile-next-bar__name" id="mobile-next-name">—</span>
+                </div>
+                <button class="btn btn--primary btn--md" onclick="goNext()">
+                    Review & Confirm →
+                </button>
+            </div>
+        </div>
     </div>
-
-    <script>
-        // ─── Data Sets ───
-        const DATA_SETS = [
-            {
-                id: 'database',
-                name: 'Dealer / Client Database',
-                desc: 'Use your own CRM or customer file. Upload a list and we match, clean, and suppress against NCOA and DNC registers.',
-                icon: '📁',
-                pricePerK: 45,
-                tag: 'Your Data'
-            },
-            {
-                id: 'conquest',
-                name: 'Conquest — Geo + Demographic',
-                desc: 'Prospect list built from your target zip codes, filtered by age, income, vehicle type, and estimated credit tier.',
-                icon: '🗺️',
-                pricePerK: 65,
-                tag: 'New Prospects'
-            },
-            {
-                id: 'inmarket',
-                name: 'In-Market Shoppers',
-                desc: 'Behavioral data — consumers who have actively been searching or researching your category in the last 30–90 days.',
-                icon: '🎯',
-                pricePerK: 85,
-                tag: 'Intent Data'
-            },
-            {
-                id: 'equity',
-                name: 'Equity / Loyalty Trigger',
-                desc: 'Matches existing customers or prospects currently in a favorable equity or lease-end window. Highly targeted.',
-                icon: '📈',
-                pricePerK: 95,
-                tag: 'High Intent'
-            },
-            {
-                id: 'subprime',
-                name: 'Subprime / Credit Band',
-                desc: 'Scrubbed list filtered to specific credit score bands. Ideal for credit, BK, and second-chance campaigns.',
-                icon: '💳',
-                pricePerK: 75,
-                tag: 'Credit Filtered'
-            },
-        ];
-
-        const ADD_ONS = [
-            { id: 'ncoa', name: 'NCOA Address Verification', desc: 'National Change of Address scrub — keeps your list deliverable and USPS compliant.', icon: '✅', price: 150 },
-            { id: 'dnc', name: 'DNC Suppression', desc: 'Do-Not-Contact suppression across state and federal registers. Required for phone campaigns.', icon: '🚫', price: 100 },
-            { id: 'landing', name: 'Personalized Landing Page', desc: 'Each mailer includes a unique QR / PURL driving to a branded landing page with lead capture.', icon: '🌐', price: 499 },
-            { id: 'tracking', name: 'Campaign Tracking Dashboard', desc: 'Real-time delivery and response tracking. See delivery rates, QR scans, and response windows.', icon: '📊', price: 299 },
-            { id: 'proof', name: 'Physical Proof / Sample', desc: 'Receive a printed proof of your mailer before the full run. Typically ships within 3 days.', icon: '🖨️', price: 75 },
-        ];
-
-        // ─── State ───
-        let order = {};
-        const saved = sessionStorage.getItem('order');
-        if (saved) order = JSON.parse(saved);
-
-        if (!order.mailer || !order.artStyle) {
-            window.location.href = 'index.html';
-        }
-
-        let selectedDataSet = order.dataOption || null;
-        let selectedAddOns = order.addOns || [];
-        let quantity = order.quantity || 5000;
-
-        // Populate step vals
-        document.getElementById('step-val-1').textContent = order.mailer ? order.mailer.name : '—';
-        document.getElementById('step-val-2').textContent = order.artStyle ? order.artStyle.name : '—';
-        document.getElementById('qty-display').textContent = quantity.toLocaleString();
-
-        // ─── Render Data Sets ───
-        function renderDataSets() {
-            const grid = document.getElementById('data-grid');
-            grid.innerHTML = DATA_SETS.map(ds => {
-                const sel = selectedDataSet && selectedDataSet.id === ds.id;
-                return `
-                    <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.id}" onclick="selectDataSet('${ds.id}')">
-                    <div class="data-option__left">
-                        <div class="data-option__icon">${ds.icon}</div>
-                        <div class="data-option__info">
-                        <div class="data-option__name">${ds.name}</div>
-                        <div class="data-option__desc">${ds.desc}</div>
-                        <span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>
-                        </div>
-                    </div>
-                    <div class="data-option__right">
-                        <div class="data-option__price">$${ds.pricePerK}</div>
-                        <div class="data-option__price-note">per 1,000 pieces</div>
-                        <div class="data-option__check">✓</div>
-                    </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ─── Render Add-Ons ───
-        function renderAddOns() {
-            const list = document.getElementById('addons-list');
-            list.innerHTML = ADD_ONS.map(ao => {
-                const checked = selectedAddOns.some(a => a.id === ao.id);
-                return `
-                    <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.id}" onclick="toggleAddOn('${ao.id}')">
-                    <div class="add-on-item__left">
-                        <span class="add-on-item__icon">${ao.icon}</span>
-                        <div class="add-on-item__info">
-                        <div class="add-on-item__name">${ao.name}</div>
-                        <div class="add-on-item__desc">${ao.desc}</div>
-                        </div>
-                    </div>
-                    <div class="add-on-item__right">
-                        <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
-                        <div class="checkbox">✓</div>
-                    </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ─── Actions ───
-        function selectDataSet(id) {
-            const ds = DATA_SETS.find(d => d.id === id);
-            if (!ds) return;
-            selectedDataSet = ds;
-
-            document.querySelectorAll('.data-option').forEach(el => el.classList.remove('is-selected'));
-            document.getElementById(`ds-${id}`).classList.add('is-selected');
-
-            updateSummary();
-        }
-
-        function toggleAddOn(id) {
-            const ao = ADD_ONS.find(a => a.id === id);
-            if (!ao) return;
-
-            const idx = selectedAddOns.findIndex(a => a.id === id);
-            if (idx > -1) {
-                selectedAddOns.splice(idx, 1);
-                document.getElementById(`ao-${id}`).classList.remove('is-checked');
-            } else {
-                selectedAddOns.push(ao);
-                document.getElementById(`ao-${id}`).classList.add('is-checked');
-            }
-
-            updateSummary();
-        }
-
-        function adjustQty(delta) {
-            quantity = Math.max(1000, quantity + delta);
-            document.getElementById('qty-display').textContent = quantity.toLocaleString();
-            updateSummary();
-        }
-
-        function computeTotal() {
-            const base = (order.mailer ? order.mailer.price : 0)
-                + (order.artStyle ? order.artStyle.price : 0);
-            const dataAmt = selectedDataSet ? (selectedDataSet.pricePerK * quantity / 1000) : 0;
-            const addOnAmt = selectedAddOns.reduce((s, a) => s + a.price, 0);
-            return { base, dataAmt, addOnAmt, total: base + dataAmt + addOnAmt };
-        }
-
-        function updateSummary() {
-            const hasSel = !!selectedDataSet;
-            document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
-
-            if (hasSel) {
-                const { base, dataAmt, addOnAmt, total } = computeTotal();
-
-                document.getElementById('step-val-3').textContent = selectedDataSet.name.split(' — ')[0];
-                document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
-                document.getElementById('next-btn').removeAttribute('disabled');
-
-                let breakdown = `
-        <div class="summary-item">
-          <div class="summary-item__top">
-            <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
-          </div>
-          <div class="summary-item__meta">
-            <span class="summary-item__tag">${order.categoryLabel || ''}</span>
-            <span class="summary-item__price">$${(order.mailer ? order.mailer.price : 0).toLocaleString()}</span>
-          </div>
-          ${order.artStyle && order.artStyle.price > 0 ? `
-            <div class="summary-item__sub-line">
-              <span>Art Upgrade</span>
-              <span>+$${order.artStyle.price}</span>
-            </div>
-          ` : ''}
-          <div class="summary-item__sub-line">
-            <span>Data: ${selectedDataSet.name.split(' — ')[0]} (${quantity.toLocaleString()} pcs)</span>
-            <span>+$${dataAmt.toLocaleString()}</span>
-          </div>
-          ${selectedAddOns.map(ao => `
-            <div class="summary-item__sub-line">
-              <span>${ao.name}</span>
-              <span>+$${ao.price}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-
-                document.getElementById('summary-breakdown').innerHTML = breakdown;
-            } else {
-                document.getElementById('next-btn').setAttribute('disabled', true);
-                document.getElementById('summary-breakdown').innerHTML = `
-        <div class="order-summary__empty">
-          <div class="order-summary__empty-icon">📊</div>
-          <p>Select a data set to see your full pricing breakdown.</p>
-        </div>
-      `;
-            }
-        }
-
-        function goNext() {
-            if (!selectedDataSet) return;
-
-            const { total } = computeTotal();
-            order.dataOption = selectedDataSet;
-            order.addOns = selectedAddOns;
-            order.quantity = quantity;
-            order.total = total;
-            sessionStorage.setItem('order', JSON.stringify(order));
-            window.location.href = 'confirm.html';
-        }
-
-        // ─── Init ───
-        renderDataSets();
-        renderAddOns();
-        updateSummary();
-    </script>
-
 </body>
+
+<script type="module">
+import DataOptions from "./scripts/DataOptions.js";
+import DataAddons from "./scripts/DataAddons.js";
+
+let order;
+let selectedDataSet;
+let selectedAddOns;
+let quantity;
+let priceMap = {};
+
+let DATA_SETS = [];
+let ADD_ONS = [];
+
+window.onload = function() {
+    // ─── State ───
+    order = {};
+    const saved = sessionStorage.getItem('order');
+    if (saved) order = JSON.parse(saved);
+
+    if (!order.mailer || !order.artStyle) {
+        window.location.href = 'index.html';
+    }
+
+    DATA_SETS = DataOptions[order.category];
+    ADD_ONS = DataAddons[order.category];
+
+    for (let i = 0; i < order.mailer.price.split(",").length; i++) {
+        const vol = order.mailer.price.split(",")[i];
+        priceMap[vol.split("->")[0]] = parseInt(vol.split("->")[1]);
+    }
+    console.log(priceMap);
+
+    selectedDataSet = order.dataOption || null;
+    selectedAddOns = order.addOns || [];
+    quantity = order.quantity || 5000;
+
+    // Populate step vals
+    document.getElementById('step-val-1').textContent = order.mailer ? order.mailer.name : '—';
+    document.getElementById('step-val-2').textContent = order.artStyle ? order.artStyle.name : '—';
+    selectQty(quantity);
+
+    // ─── Init ───
+    renderDataSets();
+    renderAddOns();
+    updateSummary();
+}
+
+// ─── Render Data Sets ───
+window.renderDataSets = function() {
+    const grid = document.getElementById('data-grid');
+    grid.innerHTML = DATA_SETS.map(ds => {
+        const sel = selectedDataSet && selectedDataSet.name === ds.name;
+        return `
+            <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.name}" onclick="selectDataSet('${ds.name}')">
+            <div class="data-option__left">
+                <div class="data-option__icon">${ds.icon}</div>
+                <div class="data-option__info">
+                <div class="data-option__name">${ds.name}</div>
+                <div class="data-option__desc">${ds.desc}</div>
+                <span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>
+                </div>
+            </div>
+            <div class="data-option__right">
+                <div class="data-option__price">$${ds.pricePerK}</div>
+                <div class="data-option__check">✓</div>
+            </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ─── Render Add-Ons ───
+window.renderAddOns = function() {
+    const list = document.getElementById('addons-list');
+    list.innerHTML = ADD_ONS.map(ao => {
+        const checked = selectedAddOns.some(a => a.name === ao.name);
+        return `
+            <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.name}" onclick="toggleAddOn('${ao.name}')">
+            <div class="add-on-item__left">
+                <span class="add-on-item__icon">${ao.icon}</span>
+                <div class="add-on-item__info">
+                <div class="add-on-item__name">${ao.name}</div>
+                <div class="add-on-item__desc">${ao.desc}</div>
+                </div>
+            </div>
+            <div class="add-on-item__right">
+                <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
+                <div class="checkbox">✓</div>
+            </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ─── Actions ───
+window.selectDataSet = function(name) {
+    const ds = DATA_SETS.find(d => d.name === name);
+    if (!ds) return;
+    selectedDataSet = ds;
+
+    document.querySelectorAll('.data-option').forEach(el => el.classList.remove('is-selected'));
+    document.getElementById(`ds-${name}`).classList.add('is-selected');
+
+    updateSummary();
+}
+
+window.toggleAddOn = function(name) {
+    const ao = ADD_ONS.find(a => a.name === name);
+    if (!ao) return;
+
+    const idx = selectedAddOns.findIndex(a => a.name === name);
+    if (idx > -1) {
+        selectedAddOns.splice(idx, 1);
+        document.getElementById(`ao-${name}`).classList.remove('is-checked');
+    } else {
+        selectedAddOns.push(ao);
+        document.getElementById(`ao-${name}`).classList.add('is-checked');
+    }
+
+    updateSummary();
+}
+
+window.selectQty = function(val) {
+    quantity = val;
+    document.querySelectorAll('.qty-tile').forEach(el => el.classList.remove('is-selected'));
+    document.getElementById(`qty-${val}`).classList.add('is-selected');
+    updateSummary();
+}
+
+window.computeTotal = function() {
+    const base = (order.mailer ? priceMap[quantity.toString()] : 0) + (order.artStyle ? order.artStyle.price : 0);
+    const dataAmt = order.mailer ? priceMap[quantity.toString()] : 0;
+    const addOnAmt = selectedAddOns.reduce((s, a) => s + a.price, 0);
+    return { base, dataAmt, addOnAmt, total: base + dataAmt + addOnAmt };
+}
+
+window.updateSummary = function() {
+    const hasSel = !!selectedDataSet;
+    document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
+
+    if (hasSel) {
+        const { base, dataAmt, addOnAmt, total } = computeTotal();
+        console.log(base);
+        console.log(dataAmt);
+        console.log(addOnAmt);
+        console.log(total);
+
+        document.getElementById('step-val-3').textContent = selectedDataSet.name.split(' — ')[0];
+        document.getElementById('summary-total').textContent = `${selectedDataSet.name}`;
+        document.getElementById('next-btn').removeAttribute('disabled');
+
+        let breakdown = `
+            <div class="summary-item">
+            <div class="summary-item__top">
+                <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
+            </div>
+            <div class="summary-item__meta">
+                <span class="summary-item__tag">${order.categoryLabel || ''}</span>
+                <span class="summary-item__price">${(order.mailer ? order.mailer.shown_price : 0).toLocaleString()}</span>
+            </div>
+            ${order.artStyle && order.artStyle.price > 0 ? `
+                <div class="summary-item__sub-line">
+                <span>Art Upgrade</span>
+                <span>+$${order.artStyle.price}</span>
+                </div>
+            ` : ''}
+            <div class="summary-item__sub-line">
+                <span>Data: ${selectedDataSet.name.split(' — ')[0]} (${quantity.toLocaleString()} pcs)</span>
+                <span>+$${dataAmt.toLocaleString()}</span>
+            </div>
+            ${selectedAddOns.map(ao => `
+                <div class="summary-item__sub-line">
+                <span>${ao.name}</span>
+                <span>+$${ao.price}</span>
+                </div>
+            `).join('')}
+            </div>
+        `;
+
+        document.getElementById('summary-breakdown').innerHTML = breakdown;
+
+        const mobileBar = document.getElementById('mobile-next-bar');
+        const nextBtn = document.getElementById('next-btn');
+
+        document.getElementById('mobile-next-name').textContent = selectedDataSet.name.split(' — ')[0];
+        mobileBar.classList.add('is-visible');
+
+        nextBtn.classList.remove('pulse');
+        void nextBtn.offsetWidth;
+        nextBtn.classList.add('pulse');
+    } else {
+        document.getElementById('next-btn').setAttribute('disabled', true);
+        document.getElementById('summary-breakdown').innerHTML = `
+            <div class="order-summary__empty">
+            <div class="order-summary__empty-icon">📊</div>
+            <p>Select a data set to see your full pricing breakdown.</p>
+            </div>
+        `;
+        document.getElementById('mobile-next-bar').classList.remove('is-visible');
+    }
+}
+
+window.goNext = function() {
+    if (!selectedDataSet) return;
+
+    const { total } = computeTotal();
+    order.dataOption = selectedDataSet;
+    order.addOns = selectedAddOns;
+    order.quantity = quantity;
+    order.total = total;
+    sessionStorage.setItem('order', JSON.stringify(order));
+    window.location.href = 'confirm.html';
+}
+</script>
 
 </html>
