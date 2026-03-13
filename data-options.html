@@ -433,7 +433,7 @@
 
             <div class="order-summary__footer" id="summary-footer" style="display:none">
                 <div class="order-summary__total-row">
-                    <span class="order-summary__total-label">Data Set</span>
+                    <span class="order-summary__total-label">Total Cost</span>
                     <span class="order-summary__total-value" id="summary-total">$0</span>
                 </div>
                 <button class="btn btn--primary btn--lg btn--full" id="next-btn" onclick="goNext()" disabled>
@@ -516,11 +516,10 @@ window.renderDataSets = function() {
                 <div class="data-option__info">
                 <div class="data-option__name">${ds.name}</div>
                 <div class="data-option__desc">${ds.desc}</div>
-                <span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>
+                <!--<span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>-->
                 </div>
             </div>
             <div class="data-option__right">
-                <div class="data-option__price">$${ds.pricePerK}</div>
                 <div class="data-option__check">✓</div>
             </div>
             </div>
@@ -587,10 +586,11 @@ window.selectQty = function(val) {
 }
 
 window.computeTotal = function() {
-    const base = (order.mailer ? priceMap[quantity.toString()] : 0) + (order.artStyle ? order.artStyle.price : 0);
-    const dataAmt = order.mailer ? priceMap[quantity.toString()] : 0;
-    const addOnAmt = selectedAddOns.reduce((s, a) => s + a.price, 0);
-    return { base, dataAmt, addOnAmt, total: base + dataAmt + addOnAmt };
+    const campaignCost = order.mailer ? priceMap[quantity.toString()] : 0; // includes pcs quantity selected
+    const artCost = order.artStyle ? order.artStyle.price : 0;
+    const addOnCost = selectedAddOns.reduce((s, a) => s + a.price, 0);
+    
+    return { campaignCost, artCost, addOnCost, total: campaignCost + artCost + addOnCost };
 }
 
 window.updateSummary = function() {
@@ -598,14 +598,10 @@ window.updateSummary = function() {
     document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
 
     if (hasSel) {
-        const { base, dataAmt, addOnAmt, total } = computeTotal();
-        console.log(base);
-        console.log(dataAmt);
-        console.log(addOnAmt);
-        console.log(total);
+        const { campaignCost, artCost, addOnCost, total } = computeTotal();
 
         document.getElementById('step-val-3').textContent = selectedDataSet.name.split(' — ')[0];
-        document.getElementById('summary-total').textContent = `${selectedDataSet.name}`;
+        document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
         document.getElementById('next-btn').removeAttribute('disabled');
 
         let breakdown = `
@@ -625,7 +621,7 @@ window.updateSummary = function() {
             ` : ''}
             <div class="summary-item__sub-line">
                 <span>Data: ${selectedDataSet.name.split(' — ')[0]} (${quantity.toLocaleString()} pcs)</span>
-                <span>+$${dataAmt.toLocaleString()}</span>
+                <span>+$${campaignCost.toLocaleString()}</span>
             </div>
             ${selectedAddOns.map(ao => `
                 <div class="summary-item__sub-line">

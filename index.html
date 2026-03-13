@@ -21,15 +21,41 @@
             <div class="landing__logo">
                 <img src="./images/logo-medium.png" alt="J Franco Marketing" class="landing__logo-img">
             </div>
+            <!-- ── Textium Strip (secondary — collapsed by default) ── -->
+            <div class="textium-strip" id="textiumStrip">
+                <!--
+                <div class="textium-strip__toggle">
+                    <span class="textium-strip__badge">Included</span>
+                    <span class="textium-strip__summary">
+                        All campaigns below include <em>Textium</em>: converts direct mail into verified mobile leads
+                    </span>
+                </div>
+                -->
+
+                <div class="textium-strip__panel" id="textiumPanel">
+                    <div class="textium-strip__copy">
+                        <strong>All campaigns below include Textium response technology that converts direct mail into
+                        verified mobile leads and can increase response by up to 300%.</strong>
+                        Customers text their unique code, we capture their mobile number and instantly
+                        deliver the lead to your CRM for follow-up.
+                        <br><br>
+                        <span class="textium-strip__cta">
+                            Try it — text <span>FPRJGX</span> to <span>48498</span>
+                        </span>
+                    </div>
+
+                    <!-- Process Flow -->
+                    <div class="textium-strip__flow">
+                        <img src="./images/textium-strip-viz.jpg">
+                    </div>
+                </div>
+            </div>
+            <!-- ── /Textium Strip ── -->
 
             <!-- Headline -->
-            
-            <h1 class="t-display t-display--xl landing__title">
+            <h1 class="t-display t-display--lg landing__title">
                 Choose Your <em>Campaign</em>
             </h1>
-            <p class="t-body landing__sub">
-                Select the marketing category that fits your outreach strategy.
-            </p>
 
             <!-- ── Divider ── -->
             <div class="grid-divider">
@@ -64,94 +90,6 @@
                     <span class="cat-card__arrow">›</span>
                 </a>
             </div>
-
-            <!-- ── Textium Strip (secondary — collapsed by default) ── -->
-            <div class="textium-strip" id="textiumStrip">
-                <button
-                    class="textium-strip__toggle"
-                    aria-expanded="false"
-                    aria-controls="textiumPanel"
-                    onclick="
-                        var s = document.getElementById('textiumStrip');
-                        var open = s.classList.toggle('is-open');
-                        this.setAttribute('aria-expanded', open);
-                    "
-                >
-                    <span class="textium-strip__badge">Included</span>
-                    <span class="textium-strip__summary">
-                        Every campaign includes <em>Textium</em>: converts direct mail into verified mobile leads
-                    </span>
-                    <span class="textium-strip__chevron">▼</span>
-                </button>
-
-                <div class="textium-strip__panel" id="textiumPanel">
-                    <div class="textium-strip__copy">
-                        All campaigns include Textium response technology that converts direct mail into
-                        verified mobile leads and can <strong>increase response by up to 300%.</strong>
-                        Customers text their unique code, we capture their mobile number and instantly
-                        deliver the lead to your CRM for follow-up.
-                        <br><br>
-                        <span class="textium-strip__cta">
-                            Try it — text <span>FPRJGX</span> to <span>48498</span>
-                        </span>
-                    </div>
-
-                    <!-- Process Flow -->
-                    <div class="textium-strip__flow">
-
-                        <div class="flow-step">
-                            <div class="flow-step__img-wrap">
-                                <span class="flow-step__num">1</span>
-                                📬
-                            </div>
-                            <span class="flow-step__label">Mail Piece<br>Delivered</span>
-                        </div>
-
-                        <div class="flow-arrow">›</div>
-
-                        <div class="flow-step">
-                            <div class="flow-step__img-wrap">
-                                <span class="flow-step__num">2</span>
-                                📱
-                            </div>
-                            <span class="flow-step__label">Customer<br>Texts PIN</span>
-                        </div>
-
-                        <div class="flow-arrow">›</div>
-
-                        <div class="flow-step">
-                            <div class="flow-step__img-wrap">
-                                <span class="flow-step__num">3</span>
-                                💬
-                            </div>
-                            <span class="flow-step__label">Instant<br>Text Response</span>
-                        </div>
-
-                        <div class="flow-arrow">›</div>
-
-                        <div class="flow-step">
-                            <div class="flow-step__img-wrap">
-                                <span class="flow-step__num">4</span>
-                                📊
-                            </div>
-                            <span class="flow-step__label">Lead Lands<br>in CRM</span>
-                        </div>
-
-                        <div class="flow-arrow">›</div>
-
-                        <div class="flow-step">
-                            <div class="flow-step__img-wrap">
-                                <span class="flow-step__num">5</span>
-                                🤝
-                            </div>
-                            <span class="flow-step__label">Your Team<br>Follows Up</span>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <!-- ── /Textium Strip ── -->
-
         </div>
     </main>
 </body>
@@ -172,7 +110,7 @@ function renderCampaigns(campaigns) {
                 <div class="cat-card__label">${campaign.label}</div>
                 <div class="cat-card__desc">${campaign.description}</div>
             </div>
-            <span class="cat-card__arrow">›</span>
+            <!--<span class="cat-card__arrow">›</span>-->
         `;
         /*
             <div class="cat-card__icon-wrap">

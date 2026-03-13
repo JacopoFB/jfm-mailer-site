@@ -330,7 +330,6 @@
 .landing__logo {
     display: flex;
     align-items: center;
-    justify-content: center;
     margin-bottom: var(--space-md);
 }
 .landing__logo-img {
@@ -344,7 +343,8 @@
 }
 .landing__title {
     color: var(--dark);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-2xl);
+    margin-top: var(--space-2xl);
 }
 .landing__title em {
     color: var(--red);
@@ -383,12 +383,8 @@
     padding: 14px 20px;
     background: none;
     border: none;
-    cursor: pointer;
     text-align: left;
     transition: background var(--ease);
-}
-.textium-strip__toggle:hover {
-    background: var(--grey-soft);
 }
 .textium-strip__badge {
     background: var(--red);
@@ -422,7 +418,6 @@
     transform: rotate(180deg);
 }
 .textium-strip__panel {
-    display: none;
     border-top: 1px solid var(--grey-soft);
 }
 .textium-strip.is-open .textium-strip__panel {
@@ -430,7 +425,7 @@
 }
 .textium-strip__copy {
     padding: 18px 20px 14px;
-    font-size: 13.5px;
+    font-size: 16px;
     font-weight: 300;
     color: var(--grey-text);
     line-height: 1.65;
@@ -445,7 +440,7 @@
     align-items: center;
     gap: 8px;
     margin-top: 10px;
-    font-size: 12.5px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--dark);
     background: var(--grey-soft);
@@ -457,8 +452,13 @@
     color: var(--red);
     font-family: var(--font-display);
     letter-spacing: 0.08em;
-    font-size: 20px;
+    font-size: 25px;
 }
+@media (max-width: 640px) {
+    .textium-strip__cta { font-size: 15px; }
+    .textium-strip__cta span { font-size: 20px; }
+}
+
 .textium-strip__flow {
     display: flex;
     align-items: center;

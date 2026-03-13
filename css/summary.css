@@ -176,7 +176,7 @@
 
 /* ─── Mini Line Items (art style, data set) ─── */
 .summary-item__sub-line {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--grey-text);
     margin-top: 5px;
     padding-top: 5px;
@@ -268,7 +268,7 @@
 }
 
 .order-summary__total-label {
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -277,7 +277,7 @@
 
 .order-summary__total-value {
     font-family: var(--font-display);
-    font-size: 20px;
+    font-size: 30px;
     color: var(--dark);
     letter-spacing: 0.02em;
 }
