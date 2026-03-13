@@ -66,13 +66,13 @@
     font-size: 26px;
     letter-spacing: 0.04em;
     color: var(--dark);
-    margin-bottom: 6px;
+    margin-bottom: 12px;
     position: relative;
     z-index: 1;
     text-align: center;
 }
 .cat-card__desc {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 300;
     color: var(--grey-text);
     line-height: 1.55;
@@ -762,11 +762,7 @@
     flex-direction: column;
 }
 
-.pdf-modal__content iframe {
-    width: 100%;
-    flex-grow: 1;
-}
-
+/* close bar */
 .pdf-modal__close {
     height: 50px;
     z-index: 2;
@@ -777,4 +773,66 @@
 .pdf-modal__close button {
     font-size: 25px;
     width: 50px;
+}
+
+/* main layout */
+.pdf-modal__body {
+    flex: 1;
+    display: flex;
+    min-height: 0; /* IMPORTANT: allows iframe to scroll */
+}
+
+/* image */
+.pdf-modal__image {
+    width: 320px; /* fixed sidebar width instead of % */
+    max-width: 35%;
+    background: #2b2b2b;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.pdf-modal__image img {
+    width: 100%;
+    height: auto; /* prevents giant stretching */
+    display: block;
+    border-radius: 6px;
+}
+
+/* pdf */
+.pdf-modal__body iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+}
+
+/* --- Mobile --- */
+@media (max-width: 768px) {
+    .pdf-modal__body {
+        flex-direction: column;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .pdf-modal__image {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        padding: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pdf-modal__image img {
+        width: auto;
+        max-width: 100%;
+        max-height: 400px;
+        display: block;
+        object-fit: contain;
+    }
+
+    .pdf-modal__body iframe {
+        width: 100%;
+        min-height: 65vh;
+    }
 }

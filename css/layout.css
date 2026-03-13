@@ -595,14 +595,10 @@
     }
     .cat-card__body {
         position: relative;
-        padding-right: 40px;
     }
     .cat-card__label {
         font-size: 20px;
         margin-bottom: 3px;
-    }
-    .cat-card__desc {
-        font-size: 12.5px;
     }
     .cat-card__count {
         display: none;

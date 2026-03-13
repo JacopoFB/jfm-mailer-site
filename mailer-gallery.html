@@ -138,7 +138,14 @@
                 <div class="pdf-modal__close">
                     <button onclick="closePreview()">✕</button>
                 </div>
-                <iframe id="pdfFrame" src="" frameborder="0"></iframe>
+
+                <div class="pdf-modal__body">
+                    <div class="pdf-modal__image" style="padding-bottom: 25px;">
+                        <img id="pdfPreviewImage" src="" alt="Preview image">
+                    </div>
+
+                    <iframe id="pdfFrame" src="" frameborder="0"></iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -203,14 +210,16 @@ window.onload = async function() {
     updateSummary();
 }
 
-window.openPreview = function(url) {
+window.openPreview = function(url, imgSideURL) {
     document.getElementById('pdfFrame').src = url;
     document.getElementById('pdfModal').classList.add('active');
+    document.getElementById("pdfPreviewImage").src = imgSideURL;
 }
 
 window.closePreview = function() {
     document.getElementById('pdfModal').classList.remove('active');
     document.getElementById('pdfFrame').src = '';
+    document.getElementById("pdfPreviewImage").src = '';
 }
 
 // Render PDF thumb
@@ -267,7 +276,7 @@ function renderTiles() {
                                 Select This Mailer
                             </button>
                             <button class="btn btn--primary btn--sm"
-                                onclick="openPreview('${getDrivePreviewLink(m.PDF_URL)}'); event.stopPropagation()">
+                                onclick="openPreview('${getDrivePreviewLink(m.PDF_URL)}', './images/text-previews/${m.text_preview}'); event.stopPropagation()">
                                 Preview
                             </button>
                         </div>
