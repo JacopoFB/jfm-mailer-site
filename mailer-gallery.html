@@ -272,12 +272,12 @@ function renderTiles() {
                             <div class="tile-price__value">${m.shown_price}</div>
                         </div>
                         <div>
-                            <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
-                                Select This Mailer
-                            </button>
                             <button class="btn btn--primary btn--sm"
                                 onclick="openPreview('${getDrivePreviewLink(m.PDF_URL)}', './images/text-previews/${m.text_preview}'); event.stopPropagation()">
                                 Preview
+                            </button>
+                            <button class="btn btn--dark btn--sm" onclick="selectMailer('${m.name}'); event.stopPropagation()">
+                                Select This Mailer
                             </button>
                         </div>
                     </div>
