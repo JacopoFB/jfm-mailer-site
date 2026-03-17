@@ -234,7 +234,7 @@
     <!-- ═══════════════════════════ PAGE HEADER ═══ -->
     <div class="page-header">
         <div class="page-header__inner">
-            <a href="javascript:history.back()" class="page-header__back">← Back to Data Options</a>
+            <a href="javascript:history.back()" class="page-header__back">← Back</a>
             <p class="t-eyebrow page-header__eyebrow">Step 4 of 4 · Final Review</p>
             <h1 class="t-display t-display--lg page-header__title">Review & <em>Confirm</em></h1>
             <p class="t-body page-header__sub">Almost done. Fill in your contact details and we'll have a rep reach out
@@ -438,14 +438,36 @@
         const saved = sessionStorage.getItem('order');
         if (saved) order = JSON.parse(saved);
 
-        if (!order.mailer || !order.artStyle || !order.dataOption) {
+        if (order.type !== 'quick2credit' && (!order.mailer || !order.artStyle || !order.dataOption)) {
             window.location.href = 'index.html';
         }
 
         // ─── Render Review Panel ───
         function renderReview() {
-            console.log(order);
             document.getElementById('review-cat-badge').textContent = order.categoryLabel || '—';
+
+            if (order.type === 'quick2credit') {
+                document.getElementById('review-cat-badge').textContent = 'Lead Capture Technology';
+                document.getElementById('review-body').innerHTML = `
+                    <div class="review-line">
+                        <span class="review-line__label">Product</span>
+                        <div class="review-line__right">
+                            <span class="review-line__val">Quick2CreditAI</span>
+                        </div>
+                    </div>
+                    <div class="review-line">
+                        <span class="review-line__label">Includes</span>
+                        <div class="review-line__right">
+                            <span class="review-line__val">AI Appointment Setting + Full Lead Pipeline</span>
+                        </div>
+                    </div>
+                    <div class="review-total-row">
+                        <span class="review-total-label">Monthly Cost</span>
+                        <span class="review-total-value">$990<span style="font-size:14px; font-weight:400; color:var(--grey-text)">/mo</span></span>
+                    </div>
+                `;
+                return;
+            }
 
             // get price from pricemap
             let priceMap = {};

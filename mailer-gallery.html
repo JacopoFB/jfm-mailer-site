@@ -390,10 +390,10 @@ window.openEnvelopePopup = function(mailer, options) {
 
         main.innerHTML = `
             <div class="selection-popup__single">
-                <img class="selection-popup__single-img" src="${imgSrc}" alt="${name}">
+                <img class="selection-popup__single-img" src="${imgSrc}" alt="${name}" style="min-width: 300px;">
                 <div class="selection-popup__single-info">
                     <h3>${name}</h3>
-                    <p>This mailer includes the envelope shown above.</p>
+                    <p>This mailer includes the shown envelope.</p>
                 </div>
             </div>
         `;

@@ -171,6 +171,7 @@
 .selection-popup__single {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 20px;
     padding: 20px;
     background: var(--color-surface-raised, #f9fafb);

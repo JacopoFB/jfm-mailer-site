@@ -8,25 +8,18 @@ const DataOptions = {
             "tag": ""
         },
         {
-            "name": "Half Conquest",
+            "name": "Half Conquest & Half Database",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": ""
         },
         {
-            "name": "Half Database",
+            "name": "All Conquest",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": "",
-            "alternative": {
-                "name": "All Conquest",
-                "desc": "",
-                "icon": "",
-                "price": 0,
-                "tag": ""
-            }
         }
     ],
     "credit": [
@@ -38,25 +31,18 @@ const DataOptions = {
             "tag": ""
         },
         {
-            "name": "Half Conquest",
+            "name": "Half Conquest & Half Database",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": ""
         },
         {
-            "name": "Half Database",
+            "name": "All Conquest",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": "",
-            "alternative": {
-                "name": "All Conquest",
-                "desc": "",
-                "icon": "",
-                "price": 0,
-                "tag": ""
-            }
         }
     ],
     "bankruptcy": [
@@ -68,25 +54,18 @@ const DataOptions = {
             "tag": ""
         },
         {
-            "name": "Half Conquest",
+            "name": "Half Conquest & Half Database",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": ""
         },
         {
-            "name": "Half Database",
+            "name": "All Conquest",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": "",
-            "alternative": {
-                "name": "All Conquest",
-                "desc": "",
-                "icon": "",
-                "price": 0,
-                "tag": ""
-            }
         }
     ],
     "saturation": [
@@ -98,25 +77,18 @@ const DataOptions = {
             "tag": ""
         },
         {
-            "name": "Half Conquest",
+            "name": "Half Conquest & Half Database",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": ""
         },
         {
-            "name": "Half Database",
+            "name": "All Conquest",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": "",
-            "alternative": {
-                "name": "All Conquest",
-                "desc": "",
-                "icon": "",
-                "price": 0,
-                "tag": ""
-            }
         }
     ],
     "service": [
@@ -128,27 +100,20 @@ const DataOptions = {
             "tag": ""
         },
         {
-            "name": "Half Conquest",
+            "name": "Half Conquest & Half Database",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": ""
         },
         {
-            "name": "Half Database",
+            "name": "All Conquest",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": "",
-            "alternative": {
-                "name": "All Conquest",
-                "desc": "",
-                "icon": "",
-                "price": 0,
-                "tag": ""
-            }
         }
-    ]
+    ],
 };
 
 export default DataOptions;
