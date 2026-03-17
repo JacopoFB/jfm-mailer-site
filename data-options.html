@@ -410,6 +410,12 @@
                     <span class="summary-step-row__label">Mailer</span>
                     <span class="summary-step-row__value" id="step-val-1">—</span>
                 </div>
+                <!-- Envelope row — only shown when selected mailer has envelope options -->
+                <div class="summary-step-row summary-step-row--sub" id="step-row-envelope" style="display:none">
+                    <span class="summary-step-row__sub-indicator"></span>
+                    <span class="summary-step-row__label">Envelope</span>
+                    <span class="summary-step-row__value" id="step-val-envelope">—</span>
+                </div>
                 <div class="summary-step-row done">
                     <span class="summary-step-row__num done">✓</span>
                     <span class="summary-step-row__label">Art Style</span>
@@ -479,7 +485,7 @@ window.onload = function() {
     if (!order.mailer || !order.artStyle) {
         window.location.href = 'index.html';
     }
-
+    console.log(DataOptions, order.category)
     DATA_SETS = DataOptions[order.category];
     ADD_ONS = DataAddons[order.category];
 
@@ -487,7 +493,6 @@ window.onload = function() {
         const vol = order.mailer.price.split(",")[i];
         priceMap[vol.split("->")[0]] = parseInt(vol.split("->")[1]);
     }
-    console.log(priceMap);
 
     selectedDataSet = order.dataOption || null;
     selectedAddOns = order.addOns || [];
@@ -596,62 +601,84 @@ window.computeTotal = function() {
 window.updateSummary = function() {
     const hasSel = !!selectedDataSet;
     document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
+    const mobileBar = document.getElementById('mobile-next-bar');
+    const nextBtn = document.getElementById('next-btn');
+
+    // Envelope sub-row — driven purely from saved order
+    const envelopeRow = document.getElementById('step-row-envelope');
+    const envelopeVal = document.getElementById('step-val-envelope');
+    if (envelopeRow && envelopeVal) {
+        if (order.envelope) {
+            envelopeRow.style.display = 'flex';
+            envelopeVal.textContent = order.envelope.name;
+        } else {
+            envelopeRow.style.display = 'none';
+        }
+    }
 
     if (hasSel) {
         const { campaignCost, artCost, addOnCost, total } = computeTotal();
 
-        document.getElementById('step-val-3').textContent = selectedDataSet.name.split(' — ')[0];
+        document.getElementById('step-val-3').textContent = selectedDataSet.name;
         document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
-        document.getElementById('next-btn').removeAttribute('disabled');
+        nextBtn.removeAttribute('disabled');
 
-        let breakdown = `
+        // Envelope sub-row — show if the order has an envelope
+        const envelopeRow = document.getElementById('step-row-envelope');
+        const envelopeVal = document.getElementById('step-val-envelope');
+        if (envelopeRow && envelopeVal) {
+            if (order.envelope) {
+                envelopeRow.style.display = 'flex';
+                envelopeVal.textContent = order.envelope.name;
+            } else {
+                envelopeRow.style.display = 'none';
+            }
+        }
+
+        const addOnLines = selectedAddOns.map(a => `
+            <div class="summary-item__meta" style="margin-top: 4px;">
+                <span class="summary-item__tag">${a.name}</span>
+                <span class="summary-item__price">$${a.price.toLocaleString()}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('summary-breakdown').innerHTML = `
             <div class="summary-item">
-            <div class="summary-item__top">
-                <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
-            </div>
-            <div class="summary-item__meta">
-                <span class="summary-item__tag">${order.categoryLabel || ''}</span>
-                <span class="summary-item__price">${(order.mailer ? order.mailer.shown_price : 0).toLocaleString()}</span>
-            </div>
-            ${order.artStyle && order.artStyle.price > 0 ? `
-                <div class="summary-item__sub-line">
-                <span>Art Upgrade</span>
-                <span>+$${order.artStyle.price}</span>
+                <div class="summary-item__top">
+                    <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
                 </div>
-            ` : ''}
-            <div class="summary-item__sub-line">
-                <span>Data: ${selectedDataSet.name.split(' — ')[0]} (${quantity.toLocaleString()} pcs)</span>
-                <span>+$${campaignCost.toLocaleString()}</span>
-            </div>
-            ${selectedAddOns.map(ao => `
-                <div class="summary-item__sub-line">
-                <span>${ao.name}</span>
-                <span>+$${ao.price}</span>
+                <div class="summary-item__meta">
+                    <span class="summary-item__tag">${quantity.toLocaleString()} pcs</span>
+                    <span class="summary-item__price">$${campaignCost.toLocaleString()}</span>
                 </div>
-            `).join('')}
+                ${order.envelope ? `
+                <div class="summary-item__meta" style="margin-top: 4px;">
+                    <span class="summary-item__tag">${order.envelope.name} Envelope</span>
+                    <span class="summary-item__price">Included</span>
+                </div>` : ''}
+                <div class="summary-item__meta" style="margin-top: 4px;">
+                    <span class="summary-item__tag">Art: ${order.artStyle ? order.artStyle.name : ''}</span>
+                    <span class="summary-item__price">Included</span>
+                </div>
+                <div class="summary-item__meta" style="margin-top: 4px;">
+                    <span class="summary-item__tag">Data: ${selectedDataSet.name}</span>
+                    <span class="summary-item__price">Included</span>
+                </div>
+                ${addOnLines}
             </div>
         `;
 
-        document.getElementById('summary-breakdown').innerHTML = breakdown;
-
-        const mobileBar = document.getElementById('mobile-next-bar');
-        const nextBtn = document.getElementById('next-btn');
-
-        document.getElementById('mobile-next-name').textContent = selectedDataSet.name.split(' — ')[0];
+        // Mobile bar
+        document.getElementById('mobile-next-name').textContent = selectedDataSet.name;
         mobileBar.classList.add('is-visible');
 
+        // Desktop pulse
         nextBtn.classList.remove('pulse');
         void nextBtn.offsetWidth;
         nextBtn.classList.add('pulse');
     } else {
-        document.getElementById('next-btn').setAttribute('disabled', true);
-        document.getElementById('summary-breakdown').innerHTML = `
-            <div class="order-summary__empty">
-            <div class="order-summary__empty-icon">📊</div>
-            <p>Select a data set to see your full pricing breakdown.</p>
-            </div>
-        `;
-        document.getElementById('mobile-next-bar').classList.remove('is-visible');
+        nextBtn.setAttribute('disabled', true);
+        mobileBar.classList.remove('is-visible');
     }
 }
 

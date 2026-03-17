@@ -130,6 +130,12 @@
                     <span class="summary-step-row__label">Mailer</span>
                     <span class="summary-step-row__value" id="step-val-1">—</span>
                 </div>
+                <!-- Envelope row — only shown when selected mailer has envelope options -->
+                <div class="summary-step-row summary-step-row--sub" id="step-row-envelope" style="display:none">
+                    <span class="summary-step-row__sub-indicator"></span>
+                    <span class="summary-step-row__label">Envelope</span>
+                    <span class="summary-step-row__value" id="step-val-envelope">—</span>
+                </div>
                 <div class="summary-step-row active">
                     <span class="summary-step-row__num active">2</span>
                     <span class="summary-step-row__label">Art Style</span>
@@ -250,9 +256,20 @@ window.selectStyle = function(name) {
 window.updateSummary = function() {
     const hasSel = !!selectedStyle;
     document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
-
     const mobileBar = document.getElementById('mobile-next-bar');
     const nextBtn = document.getElementById('next-btn');
+
+    // Envelope sub-row — driven purely from saved order
+    const envelopeRow = document.getElementById('step-row-envelope');
+    const envelopeVal = document.getElementById('step-val-envelope');
+    if (envelopeRow && envelopeVal) {
+        if (order.envelope) {
+            envelopeRow.style.display = 'flex';
+            envelopeVal.textContent = order.envelope.name;
+        } else {
+            envelopeRow.style.display = 'none';
+        }
+    }
 
     if (hasSel) {
         const base = order.mailer ? order.mailer.price : 0;
@@ -260,17 +277,20 @@ window.updateSummary = function() {
         document.getElementById('summary-total').textContent = `${selectedStyle.name}`;
         document.getElementById('step-val-2').textContent = selectedStyle.name;
         nextBtn.removeAttribute('disabled');
-        document.getElementById('summary-items').innerHTML = `
-            <div class="summary-item">
-            <div class="summary-item__top">
-                <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
-            </div>
-            <div class="summary-item__meta">
-                <span class="summary-item__tag">${order.categoryLabel || ''}</span>
-                <span class="summary-item__price">${order.mailer ? order.mailer.shown_price.toLocaleString() : 0}</span>
-            </div>
-            </div>
-        `;
+
+        // Envelope sub-row — show if the order has an envelope
+        const envelopeRow = document.getElementById('step-row-envelope');
+        const envelopeVal = document.getElementById('step-val-envelope');
+        if (envelopeRow && envelopeVal) {
+            if (order.envelope) {
+                envelopeRow.style.display = 'flex';
+                envelopeVal.textContent = order.envelope.name;
+            } else {
+                envelopeRow.style.display = 'none';
+            }
+        }
+
+        document.getElementById('summary-items').innerHTML = '';
 
         // Mobile bar
         document.getElementById('mobile-next-name').textContent = selectedStyle.name;

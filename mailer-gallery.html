@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/summary.css">
     <link rel="stylesheet" href="./css/animations.css">
+    <link rel="stylesheet" href="./css/popups.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -98,6 +99,12 @@
                     <span class="summary-step-row__label">Mailer</span>
                     <span class="summary-step-row__value" id="step-val-1">—</span>
                 </div>
+                <!-- Envelope row — only shown when selected mailer has envelope options -->
+                <div class="summary-step-row summary-step-row--sub" id="step-row-envelope" style="display:none">
+                    <span class="summary-step-row__sub-indicator"></span>
+                    <span class="summary-step-row__label">Envelope</span>
+                    <span class="summary-step-row__value" id="step-val-envelope">—</span>
+                </div>
                 <div class="summary-step-row" id="step-row-2">
                     <span class="summary-step-row__num">2</span>
                     <span class="summary-step-row__label">Art Style</span>
@@ -123,7 +130,7 @@
             <!-- Footer CTA -->
             <div class="order-summary__footer" id="summary-footer" style="display:none">
                 <div class="order-summary__total-row">
-                    <span class="order-summary__total-label">Mailer Base</span>
+                    <span class="order-summary__total-label">Tier</span>
                     <span class="order-summary__total-value" id="summary-total">$0</span>
                 </div>
                 <button class="btn btn--primary btn--lg btn--full" id="next-btn" onclick="goNext()" disabled>
@@ -133,6 +140,7 @@
             </div>
         </aside>
 
+        <!-- PDF Preview Modal -->
         <div class="pdf-modal" id="pdfModal">
             <div class="pdf-modal__content">
                 <div class="pdf-modal__close">
@@ -145,6 +153,44 @@
                     </div>
 
                     <iframe id="pdfFrame" src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════ ENVELOPE POPUP ═══ -->
+        <div class="selection-popup" id="envelopePopup">
+            <div class="selection-popup__overlay" onclick="closeEnvelopePopup()"></div>
+            <div class="selection-popup__panel">
+                <div class="selection-popup__header">
+                    <div>
+                        <p class="t-eyebrow selection-popup__eyebrow">Mailer Add-on</p>
+                        <h2 class="selection-popup__title" id="envelope-popup-title">Choose Your Envelope</h2>
+                    </div>
+                    <button class="selection-popup__close" onclick="closeEnvelopePopup()">✕</button>
+                </div>
+                <div class="selection-popup__layout">
+                    <div class="selection-popup__main" id="envelope-popup-main">
+                        <!-- Injected by JS -->
+                    </div>
+                    <div class="selection-popup__sidebar">
+                        <div class="selection-popup__summary-label">Your Order</div>
+                        <div class="selection-popup__summary-rows">
+                            <div class="selection-popup__summary-row">
+                                <span>Mailer</span>
+                                <span id="popup-val-mailer">—</span>
+                            </div>
+                            <div class="selection-popup__summary-row" id="popup-envelope-row" style="display:none">
+                                <span>Envelope</span>
+                                <span id="popup-val-envelope">—</span>
+                            </div>
+                        </div>
+                        <div class="selection-popup__next-area">
+                            <button class="btn btn--primary btn--lg btn--full" id="popup-next-btn" onclick="goNext()" disabled>
+                                Next: Art Style →
+                            </button>
+                            <p class="selection-popup__note">You'll add data options & finalize pricing in the next steps.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,6 +217,7 @@ import DataLoader from "./scripts/DataLoader.js";
 let catData;
 let catKey;
 let selectedMailer;
+let selectedEnvelope;
 
 window.onload = async function() {
     const params = new URLSearchParams(window.location.search);
@@ -190,6 +237,7 @@ window.onload = async function() {
     catData["mailers"] = mailerData;
 
     selectedMailer = null;
+    selectedEnvelope = null;
 
     // Restore from sessionStorage if coming back
     const saved = sessionStorage.getItem('order');
@@ -197,6 +245,7 @@ window.onload = async function() {
         const order = JSON.parse(saved);
         if (order.mailer && order.category === catKey) {
             selectedMailer = order.mailer;
+            selectedEnvelope = order.envelope || null;
         }
     }
 
@@ -235,27 +284,34 @@ function getDrivePreviewLink(sharedLink) {
     const match = sharedLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (!match) {
         console.warn("Invalid Google Drive link:", sharedLink);
-        return sharedLink; // fallback to original
+        return sharedLink;
     }
     const fileId = match[1];
     return `https://drive.google.com/file/d/${fileId}/preview`;
 }
+
 function getDriveImageLink(sharedLink, size = 500) {
     const match = sharedLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (!match) return sharedLink;
 
     const fileId = match[1];
-
-    // s0 = original size
-    // s1200 = 1200px wide version
     return `https://lh3.googleusercontent.com/d/${fileId}=s${size}`;
+}
+
+// Parse envelope_options string into array of { name, url } objects
+// Format: "Name One->https://..., Name Two->https://..."
+function parseEnvelopeOptions(raw) {
+    if (!raw || !raw.trim()) return [];
+    return raw.split(',').map(s => {
+        const parts = s.trim().split('->');
+        return { name: parts[0].trim(), url: parts[1].trim() };
+    }).filter(e => e.name && e.url);
 }
 
 // Render tiles
 function renderTiles() {
     const grid = document.getElementById('mailer-grid');
     grid.innerHTML = catData.mailers.map(m => {
-        console.log(m);
         const sel = selectedMailer && selectedMailer.id === m.id;
         return `
             <div class="mailer-tile${sel ? ' is-selected' : ''}" id="tile-${m.name}" onclick="selectMailer('${m.name}')">
@@ -295,28 +351,146 @@ window.selectMailer = function(name) {
     const mailer = catData.mailers.find(m => m.name === name);
     if (!mailer) return;
 
+    // If switching to a different mailer, clear the envelope selection
+    if (!selectedMailer || selectedMailer.name !== name) {
+        selectedEnvelope = null;
+    }
+
     selectedMailer = mailer;
 
-    // Update tiles
+    // Update tile highlight
     document.querySelectorAll('.mailer-tile').forEach(t => t.classList.remove('is-selected'));
     document.getElementById(`tile-${name}`).classList.add('is-selected');
 
+    const envelopeOptions = parseEnvelopeOptions(mailer.envelope_options);
+
+    if (envelopeOptions.length > 0) {
+        openEnvelopePopup(mailer, envelopeOptions);
+    } else {
+        updateSummary();
+    }
+}
+
+// ─── Envelope Popup ───
+
+window.openEnvelopePopup = function(mailer, options) {
+    const main = document.getElementById('envelope-popup-main');
+    const title = document.getElementById('envelope-popup-title');
+    const popupNextBtn = document.getElementById('popup-next-btn');
+
+    // Populate popup summary sidebar
+    document.getElementById('popup-val-mailer').textContent = mailer.name;
+
+    if (options.length === 1) {
+        // Single option — display only, auto-select it
+        title.textContent = 'Your Envelope';
+
+        const { name, url } = options[0];
+        const imgSrc = getDriveImageLink(url);
+
+        main.innerHTML = `
+            <div class="selection-popup__single">
+                <img class="selection-popup__single-img" src="${imgSrc}" alt="${name}">
+                <div class="selection-popup__single-info">
+                    <h3>${name}</h3>
+                    <p>This mailer includes the envelope shown above.</p>
+                </div>
+            </div>
+        `;
+
+        selectedEnvelope = { name, url };
+        document.getElementById('popup-val-envelope').textContent = name;
+        document.getElementById('popup-envelope-row').style.display = 'flex';
+        popupNextBtn.removeAttribute('disabled');
+    } else {
+        // Multiple options — let the user pick
+        title.textContent = 'Choose Your Envelope';
+
+        main.innerHTML = `
+            <p class="selection-popup__hint">Select the envelope style for your mailer.</p>
+            <div class="selection-popup__grid" id="envelope-grid">
+                ${options.map(({ name, url }) => {
+                    const imgSrc = getDriveImageLink(url);
+                    const isSelected = selectedEnvelope && selectedEnvelope.name === name;
+                    return `
+                        <div class="selection-popup__card${isSelected ? ' is-selected' : ''}"
+                            id="env-card-${name}"
+                            onclick="selectEnvelope('${url}', '${name}')">
+                            <img class="selection-popup__card-img" src="${imgSrc}" alt="${name}">
+                            <div class="selection-popup__card-label">${name}</div>
+                            <div class="selection-popup__card-check">✓ Selected</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        // Restore envelope summary state if one was previously selected
+        if (selectedEnvelope) {
+            document.getElementById('popup-val-envelope').textContent = selectedEnvelope.name;
+            document.getElementById('popup-envelope-row').style.display = 'flex';
+            popupNextBtn.removeAttribute('disabled');
+        } else {
+            document.getElementById('popup-val-envelope').textContent = '—';
+            document.getElementById('popup-envelope-row').style.display = 'none';
+            popupNextBtn.setAttribute('disabled', true);
+        }
+    }
+
+    document.getElementById('envelopePopup').classList.add('is-open');
+}
+
+window.selectEnvelope = function(url, name) {
+    selectedEnvelope = { name, url };
+    console.log(selectedEnvelope)
+
+    document.querySelectorAll('.selection-popup__card').forEach(c => c.classList.remove('is-selected'));
+    document.getElementById(`env-card-${name}`).classList.add('is-selected');
+
+    document.getElementById('popup-val-envelope').textContent = name;
+    document.getElementById('popup-envelope-row').style.display = 'flex';
+    document.getElementById('popup-next-btn').removeAttribute('disabled');
+
+    updateSummary();
+}
+
+window.closeEnvelopePopup = function() {
+    document.getElementById('envelopePopup').classList.remove('is-open');
     updateSummary();
 }
 
 window.updateSummary = function() {
     const hasSelection = !!selectedMailer;
+    const envelopeOptions = hasSelection ? parseEnvelopeOptions(selectedMailer.envelope_options) : [];
+    const hasEnvelopeOptions = envelopeOptions.length > 0;
 
-    document.getElementById('summary-empty').style.display = hasSelection ? 'none' : 'block';
+    if (document.getElementById('summary-empty')) document.getElementById('summary-empty').style.display = hasSelection ? 'none' : 'block';
     document.getElementById('summary-footer').style.display = hasSelection ? 'block' : 'none';
 
     const mobileBar = document.getElementById('mobile-next-bar');
     const nextBtn = document.getElementById('next-btn');
 
+    // Envelope row in the sidebar step tracker
+    const envelopeRow = document.getElementById('step-row-envelope');
+    const envelopeVal = document.getElementById('step-val-envelope');
+    if (hasEnvelopeOptions) {
+        envelopeRow.style.display = 'flex';
+        envelopeVal.textContent = selectedEnvelope ? selectedEnvelope.name : 'Not selected';
+    } else {
+        envelopeRow.style.display = 'none';
+    }
+
     if (hasSelection) {
         document.getElementById('summary-total').textContent = `${selectedMailer.shown_price.toLocaleString()}`;
         document.getElementById('step-val-1').textContent = selectedMailer.name;
-        nextBtn.removeAttribute('disabled');
+
+        // Require envelope selection before enabling Next if options exist
+        const envelopeReady = !hasEnvelopeOptions || !!selectedEnvelope;
+        if (envelopeReady) {
+            nextBtn.removeAttribute('disabled');
+        } else {
+            nextBtn.setAttribute('disabled', true);
+        }
 
         // Mobile bar
         document.getElementById('mobile-next-name').textContent = selectedMailer.name;
@@ -324,7 +498,7 @@ window.updateSummary = function() {
 
         // Desktop pulse
         nextBtn.classList.remove('pulse');
-        void nextBtn.offsetWidth; // reflow to restart animation
+        void nextBtn.offsetWidth;
         nextBtn.classList.add('pulse');
     } else {
         nextBtn.setAttribute('disabled', true);
@@ -335,12 +509,21 @@ window.updateSummary = function() {
 window.goNext = function() {
     if (!selectedMailer) return;
 
+    const envelopeOptions = parseEnvelopeOptions(selectedMailer.envelope_options);
+
+    // If envelope options exist but none chosen yet, open the popup instead of proceeding
+    if (envelopeOptions.length > 1 && !selectedEnvelope) {
+        openEnvelopePopup(selectedMailer, envelopeOptions);
+        return;
+    }
+
     // Persist to sessionStorage
     const existing = sessionStorage.getItem('order');
     const order = existing ? JSON.parse(existing) : {};
     order.category = catKey;
     order.categoryLabel = catData.label;
     order.mailer = selectedMailer;
+    order.envelope = selectedEnvelope || null;
     console.log(order);
 
     // Clear downstream selections when mailer changes

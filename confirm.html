@@ -444,45 +444,36 @@
 
         // ─── Render Review Panel ───
         function renderReview() {
+            console.log(order);
             document.getElementById('review-cat-badge').textContent = order.categoryLabel || '—';
 
+            // get price from pricemap
+            let priceMap = {};
+            for (let i = 0; i < order.mailer.price.split(",").length; i++) {
+                const vol = order.mailer.price.split(",")[i];
+                priceMap[vol.split("->")[0]] = parseInt(vol.split("->")[1]);
+            }
+   
+            const mailerPrice = order.mailer ? priceMap[order.quantity.toString()] : 0;
+            const artPrice = order.artStyle ? (order.artStyle.price || 0) : 0;
             const addOnsTotal = (order.addOns || []).reduce((s, a) => s + a.price, 0);
-            const dataTotal = order.dataOption ? (order.dataOption.pricePerK * (order.quantity || 5000) / 1000) : 0;
-            const artAdder = order.artStyle ? (order.artStyle.price || 0) : 0;
-            const base = order.mailer ? order.mailer.price : 0;
-            const grandTotal = base + artAdder + dataTotal + addOnsTotal;
+            const grandTotal = mailerPrice + artPrice + addOnsTotal;            
 
             let html = `
-            <div class="review-line">
-                <span class="review-line__label">Mailer</span>
-                <span class="review-line__val">${order.mailer ? order.mailer.name : '—'}</span>
-            </div>
-            <div class="review-line">
-                <span class="review-line__label">Base Price</span>
-                <span class="review-line__val">$${(order.mailer ? order.mailer.price : 0).toLocaleString()}</span>
-            </div>
-            <div class="review-line">
-                <span class="review-line__label">Art Style</span>
-                <span class="review-line__val">${order.artStyle ? order.artStyle.name : '—'}</span>
-            </div>
-            ${artAdder > 0 ? `
                 <div class="review-line">
-                <span class="review-line__label">Art Upgrade</span>
-                <span class="review-line__val">+$${artAdder}</span>
+                    <span class="review-line__label">
+                        ${order.mailer ? order.mailer.name : '—'} (${order.mailer ? order.quantity.toLocaleString() : ''}pcs)
+                    </span>
+                    <span class="review-line__val">$${mailerPrice.toLocaleString()}</span>
                 </div>
-            ` : ''}
-            <div class="review-line">
-                <span class="review-line__label">Data Set</span>
-                <span class="review-line__val">${order.dataOption ? order.dataOption.name.split(' — ')[0] : '—'}</span>
-            </div>
-            <div class="review-line">
-                <span class="review-line__label">Volume</span>
-                <span class="review-line__val">${(order.quantity || 5000).toLocaleString()} pieces</span>
-            </div>
-            <div class="review-line">
-                <span class="review-line__label">Data Cost</span>
-                <span class="review-line__val">$${dataTotal.toLocaleString()}</span>
-            </div>
+                <div class="review-line">
+                    <span class="review-line__label">${order.artStyle ? order.artStyle.name : '—'} (Art Style)</span>
+                    <span class="review-line__val">INCLUDED</span>
+                </div>
+                <div class="review-line">
+                    <span class="review-line__label">${order.dataOption ? order.dataOption.name.split(' — ')[0] : '—'}</span>
+                    <span class="review-line__val">INCLUDED</span>
+                </div>
             `;
 
             if (order.addOns && order.addOns.length > 0) {
@@ -491,7 +482,7 @@
                     html += `
                     <div class="review-line">
                         <span class="review-line__label">${ao.name}</span>
-                        <span class="review-line__val">+$${ao.price.toLocaleString()}</span>
+                        <span class="review-line__val">$${ao.price.toLocaleString()}</span>
                     </div>
                     `;
                 });
