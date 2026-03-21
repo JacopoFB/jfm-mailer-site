@@ -110,8 +110,6 @@
             font-size: 20px;
         }
 
-        .add-on-item__info {}
-
         .add-on-item__name {
             font-size: 13px;
             font-weight: 600;
@@ -136,6 +134,160 @@
             font-family: var(--font-display);
             font-size: 18px;
             color: var(--dark);
+        }
+
+        .data-input-panel {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: var(--light);
+            border-radius: var(--radius);
+            border: 1.5px solid var(--grey-soft);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .data-input-panel__title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--grey-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .data-input-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .data-input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .data-input-group__label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .data-radio-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px var(--space-md);
+            background: var(--white);
+            border: 1.5px solid var(--grey-soft);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: border-color var(--ease), background var(--ease);
+        }
+
+        .data-radio-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .data-radio-option:hover {
+            border-color: var(--red-border);
+        }
+
+        .data-radio-option.is-selected {
+            border-color: var(--red);
+            background: rgba(217, 4, 43, 0.02);
+        }
+
+        .data-radio-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--grey-soft);
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--ease);
+        }
+
+        .data-radio-option.is-selected .data-radio-dot {
+            border-color: var(--red);
+            background: var(--red);
+        }
+
+        .data-radio-option.is-selected .data-radio-dot::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--white);
+        }
+
+        .data-radio-option__label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .data-radio-option__sublabel {
+            font-size: 11px;
+            font-weight: 300;
+            color: var(--grey-text);
+            margin-top: 2px;
+        }
+
+        .data-followup {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .data-radio-option.is-selected .data-followup {
+            display: block;
+        }
+
+        .data-followup__row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-followup__field {
+            width: 120px;
+            padding: 8px 10px;
+            font-size: 14px;
+            font-family: var(--font-display);
+            border: 1.5px solid var(--grey-soft);
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            color: var(--dark);
+            outline: none;
+            transition: border-color var(--ease);
+        }
+
+        .data-followup__field:focus {
+            border-color: var(--red);
+        }
+
+        .data-followup__hint {
+            font-size: 11px;
+            color: var(--grey-text);
+        }
+
+        .data-text-field {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1.5px solid var(--grey-soft);
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            color: var(--dark);
+            outline: none;
+            transition: border-color var(--ease);
+            box-sizing: border-box;
+            max-width: 300px;
+        }
+
+        .data-text-field:focus {
+            border-color: var(--red);
         }
 
         .checkbox {
@@ -358,35 +510,19 @@
                 <span class="t-label text-muted">Mailing Volume</span>
             </div>
 
-            <div class="qty-tiles" id="qty-tiles">
-                <div class="qty-tile is-selected" id="qty-5000" onclick="selectQty(5000)">
-                    <div class="qty-tile__num">5,000</div>
-                    <div class="qty-tile__label">Market Test</div>
-                    <div class="qty-tile__desc">Ideal for testing a new offer or audience before scaling.</div>
-                    <span class="tile-badge">✓ Selected</span>
-                </div>
-                <div class="qty-tile" id="qty-10000" onclick="selectQty(10000)">
-                    <div class="qty-tile__num">10,000</div>
-                    <div class="qty-tile__label">Strong Coverage</div>
-                    <div class="qty-tile__desc">Solid reach across your target market with proven volume.</div>
-                    <span class="tile-badge">✓ Selected</span>
-                </div>
-                <div class="qty-tile" id="qty-15000" onclick="selectQty(15000)">
-                    <div class="qty-tile__num">15,000</div>
-                    <div class="qty-tile__label">Market Dominance</div>
-                    <div class="qty-tile__desc">Maximum saturation — own your market area this campaign cycle.</div>
-                    <span class="tile-badge">✓ Selected</span>
-                </div>
-            </div>
+            <div class="qty-tiles" id="qty-tiles"></div>
 
             <!-- Data Set Selection — NOW SECOND -->
             <div class="gallery-section__heading" style="margin-top: var(--space-lg)">
                 <span class="t-label text-muted">Choose Your Data Set</span>
             </div>
 
-            <div class="gallery-grid gallery-grid--data stagger-children" id="data-grid">
+            <div class="gallery-grid gallery-grid--data stagger-children" id="data-grid" style="margin-bottom: 25px;">
                 <!-- Injected by JS -->
             </div>
+
+            <!-- Data Input Panel — shown when selected dataset requires configuration -->
+            <div id="data-input-panel" style="display:none"></div>
 
             <!-- Add-On Options -->
             <div class="add-ons-section">
@@ -467,92 +603,222 @@
 import DataOptions from "./scripts/DataOptions.js";
 import DataAddons from "./scripts/DataAddons.js";
 
-let order;
-let selectedDataSet;
-let selectedAddOns;
-let quantity;
-let priceMap = {};
+const QTY_LABELS = [
+    { label: 'Market Test',      desc: 'Ideal for testing a new offer or audience before scaling.' },
+    { label: 'Strong Coverage',  desc: 'Solid reach across your target market with proven volume.' },
+    { label: 'Market Dominance', desc: 'Maximum saturation — own your market area this campaign cycle.' },
+];
 
-let DATA_SETS = [];
-let ADD_ONS = [];
+let order = {}, selectedDataSet, selectedAddOns, dataInputValues, quantity;
+let priceMap = {}, DATA_SETS = [], ADD_ONS = [];
 
 window.onload = function() {
-    // ─── State ───
-    order = {};
     const saved = sessionStorage.getItem('order');
     if (saved) order = JSON.parse(saved);
+    if (!order.mailer || !order.artStyle) return window.location.href = 'index.html';
 
-    if (!order.mailer || !order.artStyle) {
-        window.location.href = 'index.html';
-    }
-    console.log(DataOptions, order.category)
     DATA_SETS = DataOptions[order.category];
-    ADD_ONS = DataAddons[order.category];
+    ADD_ONS   = DataAddons[order.category];
 
-    for (let i = 0; i < order.mailer.price.split(",").length; i++) {
-        const vol = order.mailer.price.split(",")[i];
-        priceMap[vol.split("->")[0]] = parseInt(vol.split("->")[1]);
+    priceMap = Object.fromEntries(
+        order.mailer.price.split(',').map(v => {
+            const [k, p] = v.split('->');
+            return [k.trim(), parseInt(p)];
+        })
+    );
+
+    const validQtys = Object.keys(priceMap).map(Number);
+
+    selectedDataSet = order.dataOption      || null;
+    selectedAddOns  = order.addOns          || [];
+    dataInputValues = order.dataInputValues || {};
+    quantity        = validQtys.includes(order.quantity) ? order.quantity : validQtys[0];
+
+    if (DATA_SETS.length === 1 && !selectedDataSet) {
+        selectedDataSet = DATA_SETS[0];
+        dataInputValues = {};
     }
 
-    selectedDataSet = order.dataOption || null;
-    selectedAddOns = order.addOns || [];
-    quantity = order.quantity || 5000;
+    document.getElementById('step-val-1').textContent = order.mailer?.name   || '—';
+    document.getElementById('step-val-2').textContent = order.artStyle?.name || '—';
 
-    // Populate step vals
-    document.getElementById('step-val-1').textContent = order.mailer ? order.mailer.name : '—';
-    document.getElementById('step-val-2').textContent = order.artStyle ? order.artStyle.name : '—';
-    selectQty(quantity);
-
-    // ─── Init ───
+    renderQtyTiles();
+    selectQty(quantity); // drives visual selection + summary
     renderDataSets();
+    renderDataInputs();
     renderAddOns();
     updateSummary();
 }
 
-// ─── Render Data Sets ───
-window.renderDataSets = function() {
-    const grid = document.getElementById('data-grid');
-    grid.innerHTML = DATA_SETS.map(ds => {
-        const sel = selectedDataSet && selectedDataSet.name === ds.name;
+// ─── Render Qty Tiles ───
+window.renderQtyTiles = function() {
+    const keys = Object.keys(priceMap);
+    document.getElementById('qty-tiles').innerHTML = keys.map((k, i) => {
+        const meta = QTY_LABELS[i] || { label: 'Option ' + (i + 1), desc: '' };
+        const sel  = parseInt(k) === quantity;
         return `
-            <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.name}" onclick="selectDataSet('${ds.name}')">
-            <div class="data-option__left">
-                <div class="data-option__icon">${ds.icon}</div>
-                <div class="data-option__info">
-                <div class="data-option__name">${ds.name}</div>
-                <div class="data-option__desc">${ds.desc}</div>
-                <!--<span class="badge badge--grey" style="margin-top:8px">${ds.tag}</span>-->
-                </div>
-            </div>
-            <div class="data-option__right">
-                <div class="data-option__check">✓</div>
-            </div>
+            <div class="qty-tile${sel ? ' is-selected' : ''}" id="qty-${k}" onclick="selectQty(${k})">
+                <div class="qty-tile__num">${parseInt(k).toLocaleString()} pcs</div>
+                <div class="qty-tile__label">${meta.label}</div>
+                <div class="qty-tile__desc">${meta.desc}</div>
+                <span class="tile-badge">✓ Selected</span>
             </div>
         `;
     }).join('');
 }
 
-// ─── Render Add-Ons ───
-window.renderAddOns = function() {
-    const list = document.getElementById('addons-list');
-    list.innerHTML = ADD_ONS.map(ao => {
-        const checked = selectedAddOns.some(a => a.name === ao.name);
+// ─── Render Data Sets ───
+window.renderDataSets = function() {
+    document.getElementById('data-grid').innerHTML = DATA_SETS.map(ds => {
+        const sel = selectedDataSet?.name === ds.name;
         return `
-            <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.name}" onclick="toggleAddOn('${ao.name}')">
-            <div class="add-on-item__left">
-                <span class="add-on-item__icon">${ao.icon}</span>
-                <div class="add-on-item__info">
-                <div class="add-on-item__name">${ao.name}</div>
-                <div class="add-on-item__desc">${ao.desc}</div>
+            <div class="data-option${sel ? ' is-selected' : ''}" id="ds-${ds.name}" onclick="selectDataSet('${ds.name}')">
+                <div class="data-option__left">
+                    <div class="data-option__icon">${ds.icon}</div>
+                    <div class="data-option__info">
+                        <div class="data-option__name">${ds.name}</div>
+                        <div class="data-option__desc">${ds.desc}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="add-on-item__right">
-                <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
-                <div class="checkbox">✓</div>
-            </div>
+                <div class="data-option__right">
+                    <div class="data-option__check">✓</div>
+                </div>
             </div>
         `;
     }).join('');
+}
+
+// ─── Render Data Inputs ───
+window.renderDataInputs = function() {
+    const panel = document.getElementById('data-input-panel');
+    if (!selectedDataSet?.inputs?.length) {
+        panel.style.display = 'none';
+        panel.innerHTML = '';
+        return;
+    }
+    panel.style.display = 'block';
+    panel.innerHTML = selectedDataSet.inputs.map(renderInputField).join('');
+}
+
+function renderInputField(input) {
+    if (input.type === 'radio') {
+        return `
+            <div class="data-input-group">
+                ${input.label ? `<span class="data-input-group__label">${input.label}</span>` : ''}
+                ${input.options.map(opt => {
+                    const isSel = dataInputValues[input.key] === opt.value;
+                    return `
+                        <div class="data-radio-option${isSel ? ' is-selected' : ''}" onclick="setInputValue('${input.key}', '${opt.value}')">
+                            <div class="data-radio-dot"></div>
+                            <div>
+                                <div class="data-radio-option__label">${opt.label}</div>
+                                ${opt.sublabel ? `<div class="data-radio-option__sublabel">${opt.sublabel}</div>` : ''}
+                                ${opt.followUp ? `
+                                    <div class="data-followup">
+                                        <div class="data-followup__row">
+                                            <input
+                                                class="data-followup__field"
+                                                type="number"
+                                                placeholder="${opt.followUp.placeholder || ''}"
+                                                value="${dataInputValues[opt.followUp.key] || ''}"
+                                                oninput="setFollowUpValue('${opt.followUp.key}', this.value)"
+                                                onclick="event.stopPropagation()"
+                                            >
+                                            ${opt.followUp.recommendedLabel ? `<span class="data-followup__hint">${opt.followUp.recommendedLabel}</span>` : ''}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    }
+
+    if (input.type === 'text' || input.type === 'number') {
+        return `
+            <div class="data-input-group">
+                ${input.label ? `<span class="data-input-group__label">${input.label}</span>` : ''}
+                <input
+                    class="data-text-field"
+                    type="${input.type}"
+                    placeholder="${input.placeholder || ''}"
+                    value="${dataInputValues[input.key] || ''}"
+                    ${input.min !== undefined ? `min="${input.min}"` : ''}
+                    oninput="setFollowUpValue('${input.key}', this.value)"
+                >
+            </div>
+        `;
+    }
+
+    return '';
+}
+
+// ─── Render Add-Ons ───
+window.renderAddOns = function() {
+    document.getElementById('addons-list').innerHTML = ADD_ONS.map(ao => {
+        const checked = selectedAddOns.some(a => a.name === ao.name);
+        return `
+            <div class="add-on-item${checked ? ' is-checked' : ''}" id="ao-${ao.name}" onclick="toggleAddOn('${ao.name}')">
+                <div class="add-on-item__left">
+                    <span class="add-on-item__icon">${ao.icon}</span>
+                    <div class="add-on-item__info">
+                        <div class="add-on-item__name">${ao.name}</div>
+                        <div class="add-on-item__desc">${ao.desc}</div>
+                    </div>
+                </div>
+                <div class="add-on-item__right">
+                    <span class="add-on-item__price">+$${ao.price.toLocaleString()}</span>
+                    <div class="checkbox">✓</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ─── Readiness & Summary Helpers ───
+function isDataReady() {
+    if (!selectedDataSet) return false;
+    if (!selectedDataSet.inputs?.length) return true;
+    for (const input of selectedDataSet.inputs) {
+        if (input.type === 'radio') {
+            const val = dataInputValues[input.key];
+            if (!val) return false;
+            const opt = input.options.find(o => o.value === val);
+            if (opt?.followUp && !dataInputValues[opt.followUp.key] && dataInputValues[opt.followUp.key] !== 0) return false;
+        } else {
+            if (!dataInputValues[input.key] && dataInputValues[input.key] !== 0) return false;
+        }
+    }
+    return true;
+}
+
+function getDataInputLines() {
+    if (!selectedDataSet?.inputs?.length) return [];
+    const lines = [];
+    for (const input of selectedDataSet.inputs) {
+        if (input.type === 'radio') {
+            const val = dataInputValues[input.key];
+            if (!val) continue;
+            const opt = input.options.find(o => o.value === val);
+            if (!opt) continue;
+            lines.push(opt.followUp && dataInputValues[opt.followUp.key]
+                ? `${opt.label}: $${Number(dataInputValues[opt.followUp.key]).toLocaleString()}`
+                : opt.sublabel ? `${opt.label} — ${opt.sublabel}` : opt.label
+            );
+        } else {
+            const val = dataInputValues[input.key];
+            if (val) lines.push(`${input.label}: ${val}${input.unit || ''}`);
+        }
+    }
+    return lines;
+}
+
+function getDataInputSummaryText() {
+    if (!selectedDataSet?.inputs?.length) return selectedDataSet?.name || '—';
+    const lines = getDataInputLines();
+    return lines.length ? `${selectedDataSet.name} (${lines.join(', ')})` : selectedDataSet.name;
 }
 
 // ─── Actions ───
@@ -560,17 +826,31 @@ window.selectDataSet = function(name) {
     const ds = DATA_SETS.find(d => d.name === name);
     if (!ds) return;
     selectedDataSet = ds;
-
+    dataInputValues = {};
     document.querySelectorAll('.data-option').forEach(el => el.classList.remove('is-selected'));
     document.getElementById(`ds-${name}`).classList.add('is-selected');
+    renderDataInputs();
+    updateSummary();
+}
 
+window.setInputValue = function(key, value) {
+    const inputDef = selectedDataSet?.inputs?.find(i => i.key === key);
+    if (inputDef?.type === 'radio') {
+        inputDef.options.forEach(opt => { if (opt.followUp) delete dataInputValues[opt.followUp.key]; });
+    }
+    dataInputValues[key] = value;
+    renderDataInputs();
+    updateSummary();
+}
+
+window.setFollowUpValue = function(key, value) {
+    dataInputValues[key] = value;
     updateSummary();
 }
 
 window.toggleAddOn = function(name) {
-    const ao = ADD_ONS.find(a => a.name === name);
+    const ao  = ADD_ONS.find(a => a.name === name);
     if (!ao) return;
-
     const idx = selectedAddOns.findIndex(a => a.name === name);
     if (idx > -1) {
         selectedAddOns.splice(idx, 1);
@@ -579,7 +859,6 @@ window.toggleAddOn = function(name) {
         selectedAddOns.push(ao);
         document.getElementById(`ao-${name}`).classList.add('is-checked');
     }
-
     updateSummary();
 }
 
@@ -591,105 +870,104 @@ window.selectQty = function(val) {
 }
 
 window.computeTotal = function() {
-    const campaignCost = order.mailer ? priceMap[quantity.toString()] : 0; // includes pcs quantity selected
-    const artCost = order.artStyle ? order.artStyle.price : 0;
-    const addOnCost = selectedAddOns.reduce((s, a) => s + a.price, 0);
-    
+    const campaignCost = priceMap[quantity.toString()] || 0;
+    const artCost      = order.artStyle?.price || 0;
+    const addOnCost    = selectedAddOns.reduce((s, a) => s + a.price, 0);
     return { campaignCost, artCost, addOnCost, total: campaignCost + artCost + addOnCost };
 }
 
 window.updateSummary = function() {
     const hasSel = !!selectedDataSet;
-    document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
+    const isReady = isDataReady();
+    const nextBtn  = document.getElementById('next-btn');
     const mobileBar = document.getElementById('mobile-next-bar');
-    const nextBtn = document.getElementById('next-btn');
 
-    // Envelope sub-row — driven purely from saved order
+    document.getElementById('summary-footer').style.display = hasSel ? 'block' : 'none';
+
     const envelopeRow = document.getElementById('step-row-envelope');
     const envelopeVal = document.getElementById('step-val-envelope');
     if (envelopeRow && envelopeVal) {
-        if (order.envelope) {
-            envelopeRow.style.display = 'flex';
-            envelopeVal.textContent = order.envelope.name;
-        } else {
-            envelopeRow.style.display = 'none';
-        }
+        envelopeRow.style.display = order.envelope ? 'flex' : 'none';
+        if (order.envelope) envelopeVal.textContent = order.envelope.name;
     }
 
-    if (hasSel) {
-        const { campaignCost, artCost, addOnCost, total } = computeTotal();
+    if (!hasSel) {
+        nextBtn.setAttribute('disabled', true);
+        mobileBar.classList.remove('is-visible');
+        return;
+    }
 
-        document.getElementById('step-val-3').textContent = selectedDataSet.name;
-        document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
+    const { campaignCost, total } = computeTotal();
+    const summaryText = getDataInputSummaryText();
+    const dataDetailLines = getDataInputLines();
+
+    document.getElementById('step-val-3').textContent  = summaryText;
+    document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
+
+    if (isReady) {
         nextBtn.removeAttribute('disabled');
-
-        // Envelope sub-row — show if the order has an envelope
-        const envelopeRow = document.getElementById('step-row-envelope');
-        const envelopeVal = document.getElementById('step-val-envelope');
-        if (envelopeRow && envelopeVal) {
-            if (order.envelope) {
-                envelopeRow.style.display = 'flex';
-                envelopeVal.textContent = order.envelope.name;
-            } else {
-                envelopeRow.style.display = 'none';
-            }
-        }
-
-        const addOnLines = selectedAddOns.map(a => `
-            <div class="summary-item__meta" style="margin-top: 4px;">
-                <span class="summary-item__tag">${a.name}</span>
-                <span class="summary-item__price">$${a.price.toLocaleString()}</span>
-            </div>
-        `).join('');
-
-        document.getElementById('summary-breakdown').innerHTML = `
-            <div class="summary-item">
-                <div class="summary-item__top">
-                    <div class="summary-item__name">${order.mailer ? order.mailer.name : ''}</div>
-                </div>
-                <div class="summary-item__meta">
-                    <span class="summary-item__tag">${quantity.toLocaleString()} pcs</span>
-                    <span class="summary-item__price">$${campaignCost.toLocaleString()}</span>
-                </div>
-                ${order.envelope ? `
-                <div class="summary-item__meta" style="margin-top: 4px;">
-                    <span class="summary-item__tag">${order.envelope.name} Envelope</span>
-                    <span class="summary-item__price">Included</span>
-                </div>` : ''}
-                <div class="summary-item__meta" style="margin-top: 4px;">
-                    <span class="summary-item__tag">Art: ${order.artStyle ? order.artStyle.name : ''}</span>
-                    <span class="summary-item__price">Included</span>
-                </div>
-                <div class="summary-item__meta" style="margin-top: 4px;">
-                    <span class="summary-item__tag">Data: ${selectedDataSet.name}</span>
-                    <span class="summary-item__price">Included</span>
-                </div>
-                ${addOnLines}
-            </div>
-        `;
-
-        // Mobile bar
-        document.getElementById('mobile-next-name').textContent = selectedDataSet.name;
-        mobileBar.classList.add('is-visible');
-
-        // Desktop pulse
         nextBtn.classList.remove('pulse');
         void nextBtn.offsetWidth;
         nextBtn.classList.add('pulse');
     } else {
         nextBtn.setAttribute('disabled', true);
-        mobileBar.classList.remove('is-visible');
     }
+
+    const addOnHTML = selectedAddOns.map(a => `
+        <div class="summary-item__meta" style="margin-top:4px">
+            <span class="summary-item__tag">${a.name}</span>
+            <span class="summary-item__price">$${a.price.toLocaleString()}</span>
+        </div>
+    `).join('');
+
+    const dataDetailHTML = dataDetailLines.map(line => `
+        <div class="summary-item__meta" style="margin-top:4px">
+            <span class="summary-item__tag">${line}</span>
+            <span class="summary-item__price"></span>
+        </div>
+    `).join('');
+
+    document.getElementById('summary-breakdown').innerHTML = `
+        <div class="summary-item">
+            <div class="summary-item__top">
+                <div class="summary-item__name">${order.mailer?.name || ''}</div>
+            </div>
+            <div class="summary-item__meta">
+                <span class="summary-item__tag">${quantity.toLocaleString()} pcs</span>
+                <span class="summary-item__price">$${campaignCost.toLocaleString()}</span>
+            </div>
+            ${order.envelope ? `
+            <div class="summary-item__meta" style="margin-top:4px">
+                <span class="summary-item__tag">${order.envelope.name} Envelope</span>
+                <span class="summary-item__price">Included</span>
+            </div>` : ''}
+            <div class="summary-item__meta" style="margin-top:4px">
+                <span class="summary-item__tag">Art: ${order.artStyle?.name || ''}</span>
+                <span class="summary-item__price">Included</span>
+            </div>
+            <div class="summary-item__meta" style="margin-top:4px">
+                <span class="summary-item__tag">Data: ${selectedDataSet.name}</span>
+                <span class="summary-item__price">Included</span>
+            </div>
+            ${dataDetailHTML}
+            ${addOnHTML}
+        </div>
+    `;
+
+    document.getElementById('mobile-next-name').textContent = summaryText;
+    mobileBar.classList.add('is-visible');
 }
 
 window.goNext = function() {
-    if (!selectedDataSet) return;
-
+    if (!isDataReady()) return;
     const { total } = computeTotal();
-    order.dataOption = selectedDataSet;
-    order.addOns = selectedAddOns;
-    order.quantity = quantity;
-    order.total = total;
+    Object.assign(order, {
+        dataOption: selectedDataSet,
+        dataInputValues,
+        addOns: selectedAddOns,
+        quantity,
+        total
+    });
     sessionStorage.setItem('order', JSON.stringify(order));
     window.location.href = 'confirm.html';
 }

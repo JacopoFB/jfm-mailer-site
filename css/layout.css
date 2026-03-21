@@ -330,11 +330,11 @@
 .landing__logo {
     display: flex;
     align-items: center;
-    margin-bottom: var(--space-md);
+    justify-content: center;
 }
 .landing__logo-img {
-    width: 140px;
-    height: 140px;
+    width: 175px;
+    height: 175px;
     border-radius: var(--radius);
     object-fit: contain;
 }
@@ -344,7 +344,7 @@
 .landing__title {
     color: var(--dark);
     margin-bottom: var(--space-2xl);
-    margin-top: var(--space-2xl);
+    margin-top: var(--space-lg);
 }
 .landing__title em {
     color: var(--red);
@@ -459,18 +459,6 @@
     .textium-strip__cta span { font-size: 20px; }
 }
 
-.textium-strip__flow {
-    display: flex;
-    align-items: center;
-    padding: 18px 20px 20px;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-}
-.textium-strip__flow::-webkit-scrollbar {
-    display: none;
-}
 .flow-step {
     display: flex;
     flex-direction: column;

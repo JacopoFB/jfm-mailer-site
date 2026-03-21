@@ -496,6 +496,7 @@
                     <span class="review-line__label">${order.dataOption ? order.dataOption.name.split(' — ')[0] : '—'}</span>
                     <span class="review-line__val">INCLUDED</span>
                 </div>
+                ${buildDataInputLines()}
             `;
 
             if (order.addOns && order.addOns.length > 0) {
@@ -518,6 +519,39 @@
                 `;
 
             document.getElementById('review-body').innerHTML = html;
+        }
+
+        function buildDataInputLines() {
+            const inputs = order.dataOption?.inputs;
+            const vals = order.dataInputValues;
+            if (!inputs?.length || !vals) return '';
+
+            const lines = [];
+
+            for (const input of inputs) {
+                if (input.type === 'radio') {
+                    const val = vals[input.key];
+                    if (!val) continue;
+                    const opt = input.options.find(o => o.value === val);
+                    if (!opt) continue;
+                    if (opt.followUp && vals[opt.followUp.key]) {
+                        lines.push(`${opt.label}: $${Number(vals[opt.followUp.key]).toLocaleString()}`);
+                    } else {
+                        lines.push(opt.sublabel ? `${opt.label} — ${opt.sublabel}` : opt.label);
+                    }
+                } else {
+                    const val = vals[input.key];
+                    if (!val) continue;
+                    lines.push(`${input.label}: ${val}${input.unit || ''}`);
+                }
+            }
+
+            return lines.map(line => `
+                <div class="review-line" style="padding-left: 16px;">
+                    <span class="review-line__label" style="color: var(--grey-text); font-size: 11px;">↳ ${line}</span>
+                    <span class="review-line__val"></span>
+                </div>
+            `).join('');
         }
 
         // ─── Terms toggle ───
