@@ -57,25 +57,11 @@ const DataOptions = {
     ],
     "bankruptcy": [
         {
-            "name": "All Database",
+            "name": "Discharge Bankruptcy",
             "desc": "",
             "icon": "",
             "price": 0,
             "tag": ""
-        },
-        {
-            "name": "Half Conquest & Half Database",
-            "desc": "",
-            "icon": "",
-            "price": 0,
-            "tag": ""
-        },
-        {
-            "name": "All Conquest",
-            "desc": "",
-            "icon": "",
-            "price": 0,
-            "tag": "",
         }
     ],
     "saturation": [
