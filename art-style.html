@@ -225,7 +225,7 @@ window.renderArtTiles = function() {
         return `
             <div class="art-tile${sel ? ' is-selected' : ''}" id="art-${style.name}" onclick="selectStyle('${style.name}')">
                 <span class="art-tile__badge">✓ Selected</span>
-                <div class="tile-img">
+                <div class="tile-img" style="aspect-ratio: auto;">
                     <img src="${style.preview}" alt="${style.name}">
                 </div>
                 <div class="art-tile__body">
