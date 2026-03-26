@@ -245,39 +245,45 @@
     <!-- ═══════════════════════════ ORDER FORM ═══ -->
     <div class="confirm-page-body">
         <div class="confirm-grid anim-fade-up" id="order-form-wrap">
+            <form id="campaign-form" action="https://formsubmit.co/jacopo.folgoni.borsa@gmail.com" method="POST">
+                <input type="hidden" name="_html" id="_html">
 
-            <!-- LEFT: Form -->
-            <div>
+                <!-- FormSubmit Config -->
+                <input type="hidden" name="_subject" value="New Campaign Request">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
 
                 <!-- Contact Info -->
                 <div class="form-card">
                     <div class="form-card__heading">
                         <span class="form-card__heading-text">Your Contact Information</span>
                     </div>
+
                     <div class="form-grid">
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">First Name *</label>
-                                <input type="text" class="form-input" id="f-firstname" placeholder="Jane" required>
+                                <input type="text" class="form-input" name="firstName" placeholder="Jane" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Last Name *</label>
-                                <input type="text" class="form-input" id="f-lastname" placeholder="Smith" required>
+                                <input type="text" class="form-input" name="lastName" placeholder="Smith" required>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="form-label">Email Address *</label>
-                            <input type="email" class="form-input" id="f-email" placeholder="jane@dealership.com"
-                                required>
+                            <input type="email" class="form-input" name="email" placeholder="jane@dealership.com" required>
                         </div>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-input" id="f-phone" placeholder="(555) 000-0000" required>
+                                <input type="tel" class="form-input" name="phone" placeholder="(555) 000-0000" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Best Time to Reach</label>
-                                <select class="form-select" id="f-time">
+                                <select class="form-select" name="bestTime">
                                     <option value="">Select...</option>
                                     <option>Morning (9am – 12pm)</option>
                                     <option>Afternoon (12pm – 5pm)</option>
@@ -293,20 +299,21 @@
                     <div class="form-card__heading">
                         <span class="form-card__heading-text">Business Details</span>
                     </div>
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Dealership / Business Name *</label>
-                            <input type="text" class="form-input" id="f-business" placeholder="Acme Auto Group"
-                                required>
+                            <input type="text" class="form-input" name="businessName" placeholder="Acme Auto Group" required>
                         </div>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">City</label>
-                                <input type="text" class="form-input" id="f-city" placeholder="Dallas">
+                                <input type="text" class="form-input" name="city" placeholder="Dallas">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">State</label>
-                                <select class="form-select" id="f-state">
+                                <select class="form-select" name="state">
                                     <option value="">Select...</option>
                                     <option>AL</option>
                                     <option>AK</option>
@@ -361,37 +368,42 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="form-label">Target Drop Date / Timeline</label>
-                            <input type="text" class="form-input" id="f-date"
+                            <input type="text" class="form-input" name="timeline"
                                 placeholder="e.g., End of March, ASAP, No preference">
                         </div>
+
                         <div class="form-group">
                             <label class="form-label">Additional Notes</label>
-                            <textarea class="form-textarea" id="f-notes"
-                                placeholder="Anything else your rep should know — offer details, VIN exclusions, upload instructions, etc."></textarea>
+                            <textarea class="form-textarea" name="notes"
+                                placeholder="Anything else your rep should know"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- Terms -->
                 <div class="form-card">
-                    <label class="terms-check" id="terms-wrap" onclick="toggleTerms()">
-                        <input type="checkbox" id="f-terms" onclick="event.stopPropagation()">
+                    <label class="terms-check">
+                        <input type="checkbox" name="terms" required>
                         <span class="terms-check__text">
-                            I understand this is a campaign inquiry and not a finalized purchase. A J Franco Marketing
-                            representative will contact me to confirm details, provide a formal quote, and collect
-                            payment before any work begins.
+                            I understand this is a campaign inquiry and not a finalized purchase.
                         </span>
                     </label>
                 </div>
 
-                <button class="btn btn--primary btn--lg btn--full" id="submit-btn" onclick="submitOrder()" disabled
-                    style="font-size:14px; padding:18px;">
+                <!-- Submit -->
+                <button 
+                    type="submit" 
+                    id="submit-btn"
+                    class="btn btn--primary btn--lg btn--full"
+                    style="font-size:14px; padding:18px;"
+                    disabled>
                     Submit Campaign Request →
                 </button>
 
-            </div>
+            </form>
 
             <!-- RIGHT: Order Review -->
             <div class="review-panel">
@@ -424,8 +436,7 @@
             <div class="success-icon anim-pop-in">✓</div>
             <h2 class="t-display t-display--md" style="margin-bottom:12px">Request Submitted!</h2>
             <p class="t-body text-muted" style="max-width:400px;margin:0 auto 32px">
-                Your campaign request has been received. A J Franco Marketing rep will contact you within one business
-                day to review, confirm, and get you on the schedule.
+                Your campaign request has been received. A J Franco Marketing rep will contact you soon to review and confirm.
             </p>
             <a href="index.html" class="btn btn--dark btn--lg" onclick="sessionStorage.clear()">Start a New Campaign</a>
         </div>
@@ -554,59 +565,125 @@
             `).join('');
         }
 
-        // ─── Terms toggle ───
-        function toggleTerms() {
-            const cb = document.getElementById('f-terms');
-            const wrap = document.getElementById('terms-wrap');
-            cb.checked = !cb.checked;
-            wrap.classList.toggle('is-checked', cb.checked);
-            validateForm();
-        }
+        const form = document.getElementById("campaign-form");
+        const submitBtn = document.getElementById("submit-btn");
 
-        // ─── Validate ───
         function validateForm() {
-            const required = ['f-firstname', 'f-lastname', 'f-email', 'f-phone', 'f-business'];
-            const filled = required.every(id => document.getElementById(id).value.trim() !== '');
-            const terms = document.getElementById('f-terms').checked;
-            document.getElementById('submit-btn').toggleAttribute('disabled', !(filled && terms));
+            const isValid = form.checkValidity(); // built-in HTML validation
+            submitBtn.disabled = !isValid;
+            console.log(order);
         }
-
-        document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
-            el.addEventListener('input', validateForm);
-            el.addEventListener('change', validateForm);
-        });
+        
+        form.addEventListener("input", validateForm);
+        form.addEventListener("change", validateForm);
 
         // ─── Submit ───
-        function submitOrder() {
-            const payload = {
-                contact: {
-                    firstName: document.getElementById('f-firstname').value,
-                    lastName: document.getElementById('f-lastname').value,
-                    email: document.getElementById('f-email').value,
-                    phone: document.getElementById('f-phone').value,
-                    bestTime: document.getElementById('f-time').value,
-                },
-                business: {
-                    name: document.getElementById('f-business').value,
-                    city: document.getElementById('f-city').value,
-                    state: document.getElementById('f-state').value,
-                    dropDate: document.getElementById('f-date').value,
-                    notes: document.getElementById('f-notes').value,
-                },
-                campaign: order
-            };
+        document.getElementById("campaign-form").addEventListener("submit", function (e) {
+            e.preventDefault();
 
-            console.log('Order Payload:', JSON.stringify(payload, null, 2));
-            
-            document.getElementById('order-form-wrap').style.display = 'none';
-            document.querySelector('.page-header').style.display = 'none';
-            document.querySelector('.confirm-page-body').style.display = 'flex';
-            document.querySelector('.confirm-page-body').style.justifyContent = 'center';
-            document.getElementById('success-screen').classList.add('active');
-        }
+            const form = e.target;
+
+            // Gather form data
+            const formData = new FormData(form);
+            const formEntries = {};
+            formData.forEach((value, key) => {
+                if (key !== "_html") formEntries[key] = value;
+            });
+
+            // Make sure order is defined - you need to have access to the order object
+            // If order is not defined globally, you need to define it or get it from somewhere
+            if (typeof order === 'undefined') {
+                console.error('Order object is not defined!');
+                // Optionally add a message to the email
+                formEntries.orderError = 'Order data was not available';
+            }
+
+            // Flatten and clean the order object with BETTER TEXT FORMATTING
+            function flattenOrder(obj, prefix = '') {
+                let lines = [];
+
+                for (const key in obj) {
+                    if (!obj.hasOwnProperty(key)) continue;
+                    const value = obj[key];
+
+                    if (value === null || value === undefined || value === '') continue;
+
+                    // Skip preview/description fields you don't want
+                    if (['PDF_URL','Preview','text_preview','icon','tags','adderLabel','previewClass','url','description'].includes(key)) continue;
+
+                    // Handle nested objects
+                    if (typeof value === 'object' && !Array.isArray(value)) {
+                        lines = lines.concat(flattenOrder(value, prefix + key + '.'));
+                    } else if (Array.isArray(value)) {
+                        // Condense arrays like add-ons
+                        value.forEach((item, idx) => {
+                            if (typeof item === 'object') {
+                                // Special handling for addOns
+                                if (prefix + key === 'addOns.') {
+                                    // Example: "Addon #0 -> Name - $Price"
+                                    const name = item.name || 'Unnamed';
+                                    const price = item.price != null ? `$${Number(item.price).toLocaleString()}` : '';
+                                    lines.push(`Addon #${idx} → ${name}${price ? ' - ' + price : ''}`);
+                                } else if (prefix + key === 'mailer.') {
+                                    // Only include mailer name & quantity
+                                    const qty = item.quantity || obj.quantity || '';
+                                    lines.push(`Mailer → ${item.name || 'Unnamed'} (${qty} pcs)`);
+                                } else {
+                                    // Flatten other objects normally
+                                    lines = lines.concat(flattenOrder(item, prefix + key + `[${idx}].`));
+                                }
+                            } else {
+                                // Normal array of values
+                                let cleanKey = (prefix + key + `[${idx}]`).replace(/\./g, ' → ').replace(/\[(\d+)\]/g, ' #$1');
+                                lines.push(`${cleanKey}: ${item}`);
+                            }
+                        });
+                    } else {
+                        // Normal key/value
+                        let cleanKey = (prefix + key).replace(/\./g, ' → ').replace(/\[(\d+)\]/g, ' #$1');
+                        lines.push(`${cleanKey}: ${value}`);
+                    }
+                }
+
+                return lines;
+            }
+
+            const orderLines = (typeof order !== 'undefined' && order) ? flattenOrder(order) : [];
+
+            // Build HTML email
+            let html = `<h2>Submitted Form Data</h2><table border="1" cellpadding="5" cellspacing="0">`;
+            for (const key in formEntries) {
+                html += `<tr><td><strong>${key}</strong></td><td>${formEntries[key]}</td></tr>`;
+            }
+            html += `</table>`;
+
+            if (orderLines.length) {
+                // Add order data as a PRE-FORMATTED TEXT BLOCK (not HTML list)
+                html += `<h2>Order Details</h2>`;
+                html += `<pre style="background:#f5f5f5; padding:15px; font-family:monospace; font-size:13px; white-space:pre-wrap;">`;
+                orderLines.forEach(line => {
+                    html += `${line}\n`;
+                });
+                html += `</pre>`;
+                
+                // Keep the hidden field as is
+                const orderDataInput = document.createElement('input');
+                orderDataInput.type = 'hidden';
+                orderDataInput.name = 'orderData';
+                orderDataInput.value = orderLines.join('\n');
+                form.appendChild(orderDataInput);
+            }
+
+            // Attach HTML to hidden _html field
+            document.getElementById('_html').value = html;
+
+            // Submit the form normally
+            form.submit();
+        });
 
         // ─── Init ───
         renderReview();
+        validateForm();
     </script>
 
 </body>

@@ -120,6 +120,7 @@ function renderCampaigns(campaigns) {
 window.onload = async function() {
     const campaigns = await DataLoader.loadCampaignList();
     renderCampaigns(campaigns);
+    sessionStorage.setItem('order', JSON.stringify({})); // flush any previous orders
 }
 </script>
 </html>
