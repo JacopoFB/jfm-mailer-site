@@ -173,11 +173,12 @@
     transition: box-shadow var(--ease), transform var(--ease), border-color var(--ease);
     cursor: pointer;
     position: relative;
-    aspect-ratio: 1/1;
+
     display: flex;
     flex-direction: column;
 }
 
+/* hover + selected unchanged */
 .mailer-tile:hover {
     box-shadow: var(--shadow-lg);
     transform: translateY(-2px);
@@ -360,7 +361,7 @@
     color: var(--white);
 }
 
-/* ─── Tile Shared Elements ─── */
+/* badge unchanged */
 .tile-badge {
     position: absolute;
     top: 10px;
@@ -379,26 +380,25 @@
     z-index: 2;
 }
 
+/* ✅ KEY FIX: square image area */
 .tile-img {
     width: 100%;
-    flex-grow: 1;
-    min-height: 0;
+    aspect-ratio: 1 / 1; /* square ONLY for image */
     overflow: hidden;
     background-color: rgb(67, 67, 117);
-}
-.tile-img img {
-    width: 100%;
-    /*max-height: 100%;*/
-    object-fit: cover;
+    flex-shrink: 0; /* prevents collapse */
 }
 
+/* make image fully fill square */
+.tile-img img,
 .tile-img canvas {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* yes — this works on canvas */
+    object-fit: cover;
     display: block;
 }
 
+/* placeholder unchanged */
 .tile-img-placeholder {
     width: 100%;
     height: 155px;
@@ -428,10 +428,15 @@
     z-index: 1;
 }
 
+/* content area */
 .tile-body {
     padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
+/* text unchanged */
 .tile-name {
     font-family: var(--font-display);
     font-size: 19px;
@@ -440,19 +445,27 @@
     margin-bottom: 5px;
 }
 
+/* optional clamp for consistency */
 .tile-desc {
     font-size: 11px;
     font-weight: 300;
     color: var(--grey-text);
     line-height: 1.55;
     margin-bottom: 14px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
+/* footer sticks to bottom for alignment */
 .tile-footer {
     display: flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    margin-top: auto; /* 👈 important */
 }
 
 .tile-price {

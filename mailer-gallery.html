@@ -252,7 +252,7 @@ window.onload = async function() {
     // Populate page header
     document.getElementById('cat-eyebrow').textContent = catData.subLabel;
     document.getElementById('cat-title').textContent = catData.label;
-    document.getElementById('cat-sub').textContent = catData.description;
+    document.getElementById('cat-sub').innerHTML = catData.description;
 
     // ─── Run ───
     renderTiles();
