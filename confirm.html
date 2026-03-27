@@ -245,13 +245,10 @@
     <!-- ═══════════════════════════ ORDER FORM ═══ -->
     <div class="confirm-page-body">
         <div class="confirm-grid anim-fade-up" id="order-form-wrap">
-            <form id="campaign-form" action="https://formsubmit.co/jacopo.folgoni.borsa@gmail.com" method="POST">
-                <input type="hidden" name="_html" id="_html">
-
+            <form id="campaign-form" action="https://formsubmit.co/jfranco@jfrancomarketing.com" method="POST">
                 <!-- FormSubmit Config -->
                 <input type="hidden" name="_subject" value="New Campaign Request">
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
 
                 <!-- Contact Info -->
                 <div class="form-card">
@@ -581,103 +578,173 @@
         document.getElementById("campaign-form").addEventListener("submit", function (e) {
             e.preventDefault();
 
+            console.log(order);
+
             const form = e.target;
 
-            // Gather form data
-            const formData = new FormData(form);
-            const formEntries = {};
-            formData.forEach((value, key) => {
-                if (key !== "_html") formEntries[key] = value;
-            });
+            // Remove previously injected fields
+            form.querySelectorAll(".dynamic-order-field").forEach(el => el.remove());
 
-            // Make sure order is defined - you need to have access to the order object
-            // If order is not defined globally, you need to define it or get it from somewhere
-            if (typeof order === 'undefined') {
-                console.error('Order object is not defined!');
-                // Optionally add a message to the email
-                formEntries.orderError = 'Order data was not available';
+            if (typeof order === "undefined" || !order) {
+                console.error("Order object is not defined!");
+                return;
             }
 
-            // Flatten and clean the order object with BETTER TEXT FORMATTING
-            function flattenOrder(obj, prefix = '') {
-                let lines = [];
+            const injected = [];
 
-                for (const key in obj) {
-                    if (!obj.hasOwnProperty(key)) continue;
-                    const value = obj[key];
+            const skipKeys = new Set([
+                "description",
+                "desc",
+                "url",
+                "PDF_URL",
+                "Preview",
+                "preview",
+                "previewClass",
+                "tags",
+                "adderLabel",
+                "icon",
+                "shown_price",
+                ""
+            ]);
 
-                    if (value === null || value === undefined || value === '') continue;
+            const knownTopLevelKeys = new Set([
+                "category",
+                "categoryLabel",
+                "mailer",
+                "envelope",
+                "artStyle",
+                "dataOption",
+                "dataInputValues",
+                "addOns",
+                "quantity",
+                "total"
+            ]);
 
-                    // Skip preview/description fields you don't want
-                    if (['PDF_URL','Preview','text_preview','icon','tags','adderLabel','previewClass','url','description'].includes(key)) continue;
+            function addLine(label, value) {
+                if (value === null || value === undefined || value === "") return;
 
-                    // Handle nested objects
-                    if (typeof value === 'object' && !Array.isArray(value)) {
-                        lines = lines.concat(flattenOrder(value, prefix + key + '.'));
-                    } else if (Array.isArray(value)) {
-                        // Condense arrays like add-ons
-                        value.forEach((item, idx) => {
-                            if (typeof item === 'object') {
-                                // Special handling for addOns
-                                if (prefix + key === 'addOns.') {
-                                    // Example: "Addon #0 -> Name - $Price"
-                                    const name = item.name || 'Unnamed';
-                                    const price = item.price != null ? `$${Number(item.price).toLocaleString()}` : '';
-                                    lines.push(`Addon #${idx} → ${name}${price ? ' - ' + price : ''}`);
-                                } else if (prefix + key === 'mailer.') {
-                                    // Only include mailer name & quantity
-                                    const qty = item.quantity || obj.quantity || '';
-                                    lines.push(`Mailer → ${item.name || 'Unnamed'} (${qty} pcs)`);
-                                } else {
-                                    // Flatten other objects normally
-                                    lines = lines.concat(flattenOrder(item, prefix + key + `[${idx}].`));
-                                }
-                            } else {
-                                // Normal array of values
-                                let cleanKey = (prefix + key + `[${idx}]`).replace(/\./g, ' → ').replace(/\[(\d+)\]/g, ' #$1');
-                                lines.push(`${cleanKey}: ${item}`);
-                            }
-                        });
-                    } else {
-                        // Normal key/value
-                        let cleanKey = (prefix + key).replace(/\./g, ' → ').replace(/\[(\d+)\]/g, ' #$1');
-                        lines.push(`${cleanKey}: ${value}`);
-                    }
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = label;
+                input.value = String(value);
+                input.classList.add("dynamic-order-field");
+                form.appendChild(input);
+            }
+
+            function formatMoney(val) {
+                const n = Number(val);
+                if (Number.isNaN(n)) return String(val ?? "");
+                return `$${n.toLocaleString()}`;
+            }
+
+            function getMailerPrice(priceString, quantity) {
+                if (!priceString || quantity === null || quantity === undefined) return "";
+
+                const q = Number(quantity);
+                const tiers = String(priceString).split(",");
+
+                for (const tier of tiers) {
+                    const [tierQty, tierPrice] = tier.split("->").map(s => s.trim());
+                    if (Number(tierQty) === q) return tierPrice;
                 }
 
-                return lines;
+                return "";
             }
 
-            const orderLines = (typeof order !== 'undefined' && order) ? flattenOrder(order) : [];
-
-            // Build HTML email
-            let html = `<h2>Submitted Form Data</h2><table border="1" cellpadding="5" cellspacing="0">`;
-            for (const key in formEntries) {
-                html += `<tr><td><strong>${key}</strong></td><td>${formEntries[key]}</td></tr>`;
+            function cleanObjectString(obj) {
+                return Object.entries(obj || {})
+                    .filter(([key, value]) => !skipKeys.has(key) && value !== null && value !== undefined && value !== "")
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(", ");
             }
-            html += `</table>`;
 
-            if (orderLines.length) {
-                // Add order data as a PRE-FORMATTED TEXT BLOCK (not HTML list)
-                html += `<h2>Order Details</h2>`;
-                html += `<pre style="background:#f5f5f5; padding:15px; font-family:monospace; font-size:13px; white-space:pre-wrap;">`;
-                orderLines.forEach(line => {
-                    html += `${line}\n`;
+            // Header separator so the email clearly shows the split
+            addLine("Order Details", " ");
+
+            // Simple top-level fields first
+            if (order.category) addLine("category", order.category);
+            if (order.categoryLabel) addLine("categoryLabel", order.categoryLabel);
+
+            // Mailer
+            if (order.mailer) {
+                const mailerName = order.mailer.name || "Unnamed";
+                const qty = order.quantity;
+                const mailerPrice = getMailerPrice(order.mailer.price, qty);
+
+                addLine(
+                    "mailer",
+                    `${mailerName} - ${qty != null ? `${qty}pcs` : ""}${mailerPrice ? ` - ${formatMoney(mailerPrice)}` : ""}`.trim()
+                );
+            }
+
+            // Envelope
+            if (order.envelope) {
+                addLine("envelope", order.envelope.name || "Unnamed");
+            }
+
+            // Art style
+            if (order.artStyle) {
+                const artName = order.artStyle.name || "Unnamed";
+                const artPrice = order.artStyle.price != null ? formatMoney(order.artStyle.price) : "";
+                addLine("artStyle", `${artName}${artPrice ? ` - ${artPrice}` : ""}`);
+            }
+
+            // Data option
+            if (order.dataOption) {
+                const dataName = order.dataOption.name || "Unnamed";
+                const dataPrice = order.dataOption.price != null ? formatMoney(order.dataOption.price) : "";
+                const dataFields = cleanObjectString(order.dataInputValues);
+
+                addLine(
+                    "dataOption",
+                    `${dataName}${dataPrice ? ` - ${dataPrice}` : ""}${dataFields ? ` - FIELDS: ${dataFields}` : ""}`
+                );
+            }
+
+            // Add-ons
+            if (Array.isArray(order.addOns)) {
+                order.addOns.forEach((addon, idx) => {
+                    const addonName = addon?.name || "Unnamed";
+                    const addonPrice = addon?.price != null ? formatMoney(addon.price) : "";
+                    addLine(`addon #${idx + 1}`, `${addonName}${addonPrice ? ` - ${addonPrice}` : ""}`);
                 });
-                html += `</pre>`;
-                
-                // Keep the hidden field as is
-                const orderDataInput = document.createElement('input');
-                orderDataInput.type = 'hidden';
-                orderDataInput.name = 'orderData';
-                orderDataInput.value = orderLines.join('\n');
-                form.appendChild(orderDataInput);
             }
 
-            // Attach HTML to hidden _html field
-            document.getElementById('_html').value = html;
+            // Any remaining top-level fields that were not handled above
+            Object.entries(order).forEach(([key, value]) => {
+                if (knownTopLevelKeys.has(key) || skipKeys.has(key)) return;
 
-            // Submit the form normally
+                if (value && typeof value === "object" && !Array.isArray(value)) {
+                    const cleaned = Object.entries(value)
+                        .filter(([k, v]) => !skipKeys.has(k) && v !== null && v !== undefined && v !== "")
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join(", ");
+
+                    if (cleaned) addLine(key, cleaned);
+                } else if (Array.isArray(value)) {
+                    const cleaned = value
+                        .map(item => {
+                            if (item && typeof item === "object") {
+                                return Object.entries(item)
+                                    .filter(([k, v]) => !skipKeys.has(k) && v !== null && v !== undefined && v !== "")
+                                    .map(([k, v]) => `${k}: ${v}`)
+                                    .join(", ");
+                            }
+                            return String(item);
+                        })
+                        .filter(Boolean)
+                        .join(", ");
+
+                    if (cleaned) addLine(key, cleaned);
+                } else {
+                    addLine(key, value);
+                }
+            });
+
+            // final summary items
+            if (order.quantity != null) addLine("quantity", `${order.quantity} pcs`);
+            if (order.total != null) addLine("total", formatMoney(order.total));
+
             form.submit();
         });
 
